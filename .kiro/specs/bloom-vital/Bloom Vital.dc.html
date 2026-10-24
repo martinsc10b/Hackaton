@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/bloom-design-system-c0021389-bb7d-4ce9-bdc9-4f8b34a0b499/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/bloom-design-system-c0021389-bb7d-4ce9-bdc9-4f8b34a0b499/tokens/colors.css">
+<link rel="stylesheet" href="_ds/bloom-design-system-c0021389-bb7d-4ce9-bdc9-4f8b34a0b499/tokens/typography.css">
+<link rel="stylesheet" href="_ds/bloom-design-system-c0021389-bb7d-4ce9-bdc9-4f8b34a0b499/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/bloom-design-system-c0021389-bb7d-4ce9-bdc9-4f8b34a0b499/tokens/base.css">
+<link rel="stylesheet" href="_ds/bloom-design-system-c0021389-bb7d-4ce9-bdc9-4f8b34a0b499/styles.css">
+<script src="_ds/bloom-design-system-c0021389-bb7d-4ce9-bdc9-4f8b34a0b499/_ds_bundle.js"></script>
+<style>body{margin:0;background:#eef1f6;font-family:var(--font-sans)}a{color:var(--blue-600)}a:hover{color:var(--blue-700)}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,31,75,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 22px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#001f4b;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 14px/1.2 var(--font-sans);color:#001f4b}.dv-opts{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:10px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,31,75,.08);color:#001f4b;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:500 12px/1.3 var(--font-sans);color:#4c5568}.dv-opt:target .dv-oid{background:#16aad3;color:#fff}.dv-next{margin:24px 0 0;font:12px/1.5 var(--font-sans);color:#6b7488}input::placeholder,textarea::placeholder{color:#9aa4b8}@keyframes bvFall{0%{opacity:1;transform:translateY(0) rotate(0deg)}80%{opacity:1}100%{opacity:0;transform:translateY(460px) rotate(540deg)}}@keyframes bvRise{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:none}}</style>
+</helmet>
+
+<section class="dv-turn" id="t3">
+<div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname">Tweaks from the video reference · story, dashboard, QR/email, family</span></div>
+<div class="dv-opts">
+
+<!-- 3a splash -->
+<div class="dv-opt" id="3a"><div class="dv-olabel"><a class="dv-oid" href="#3a">3a</a>Splash · B + Bloom Vital</div>
+<div style="width:390px;height:844px;border-radius:44px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);border:1px solid var(--grey-200);background:linear-gradient(180deg,#ffffff 0%,var(--blue-50) 60%,var(--blue-100) 100%)">
+  <div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font:600 15px var(--font-sans);color:var(--navy-900)"><span>8:00 AM</span><div style="display:flex;align-items:center;gap:8px"><x-import component-from-global-scope="BloomDesignSystem_c00213.Badge" tone="neutral" hint-size="110px,22px">{{ L.badge }}</x-import><div role="group" aria-label="Language" style="flex:none;display:flex;padding:3px;border-radius:999px;background:var(--grey-100);color:var(--grey-600)"><button onClick="{{ setEn }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ enBg }};color:{{ enFg }};box-shadow:{{ enSh }};transition:background 120ms">EN</button><button onClick="{{ setEs }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ esBg }};color:{{ esFg }};box-shadow:{{ esSh }};transition:background 120ms">ESP</button></div></div></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:0 32px;text-align:center">
+    <div style="width:104px;height:104px;border-radius:999px;background:#fff;box-shadow:var(--shadow-lg);display:flex;align-items:center;justify-content:center"><img src="assets/bloom-b.png" alt="Bloom" style="height:56px;width:auto"></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span style="font:800 36px/1.1 var(--font-sans);color:var(--navy-900);letter-spacing:-0.02em">Bloom Vital</span>
+      <span style="font:500 20px/1.35 var(--font-sans);color:var(--navy-700);text-wrap:balance">{{ L.tag1 }} <span style="font:600 30px/1 var(--font-hand);color:var(--blue-600)">{{ L.tag2 }}</span></span>
+    </div>
+  </div>
+  <div style="flex:none;padding:0 24px 18px;display:flex;flex-direction:column;gap:14px">
+    <p style="margin: 0; font: 500 15px/1.45 var(--font-sans); color: var(--grey-600); text-align: center; text-wrap: balance; font-style: italic">{{ L.own1 }} <b>{{ L.own2 }}</b></p>
+    <x-import component-from-global-scope="BloomDesignSystem_c00213.Button" variant="primary" size="lg" full-width="{{ true }}" onClick="{{ goDash }}" hint-size="100%,54px">{{ L.start }}</x-import>
+  </div>
+  <div style="flex:none;padding:10px 20px 28px;text-align:center;font:500 12px var(--font-sans);color:var(--grey-600)">{{ L.footer }}</div>
+</div></div>
+
+<!-- 3b notification -->
+<div class="dv-opt" id="3b"><div class="dv-olabel"><a class="dv-oid" href="#3b">3b</a>Morning notification</div>
+<div style="width:390px;height:844px;border-radius:44px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);border:1px solid var(--grey-200);background:linear-gradient(170deg,var(--navy-500) 0%,var(--navy-900) 70%)">
+  <div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font:600 15px var(--font-sans);color:#fff"><span></span><div style="display:flex;align-items:center;gap:8px"><x-import component-from-global-scope="BloomDesignSystem_c00213.Badge" tone="neutral" hint-size="110px,22px">{{ L.badge }}</x-import><div role="group" aria-label="Language" style="flex:none;display:flex;padding:3px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff"><button onClick="{{ setEn }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ enBg }};color:{{ enFg }};box-shadow:{{ enSh }};transition:background 120ms">EN</button><button onClick="{{ setEs }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ esBg }};color:{{ esFg }};box-shadow:{{ esSh }};transition:background 120ms">ESP</button></div></div></div>
+  <div style="flex:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding-top:36px;color:#fff">
+    <span style="font:500 18px var(--font-sans);opacity:.85">{{ L.date }}</span>
+    <span style="font:300 92px/1 var(--font-sans);letter-spacing:-0.03em">8:00<span style="font:500 26px var(--font-sans);letter-spacing:0;margin-left:6px">AM</span></span>
+  </div>
+  <div style="flex:1;padding:28px 14px 0;display:flex;flex-direction:column;gap:10px">
+    <a href="#3c" style="text-decoration:none;background:rgba(255,255,255,.94);border-radius:22px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;box-shadow:var(--shadow-lg);animation:bvRise 420ms var(--ease-out) both">
+      <span style="width:40px;height:40px;flex:none;border-radius:10px;background:#fff;border:1px solid var(--grey-200);display:flex;align-items:center;justify-content:center"><img src="assets/bloom-b.png" alt="" style="height:24px;width:auto"></span>
+      <span style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <span style="display:flex;justify-content:space-between;font:600 15px var(--font-sans);color:var(--navy-900)">Bloom Vital<span style="font:400 13px var(--font-sans);color:var(--grey-500)">{{ L.now }}</span></span><span style="font:400 15px/1.4 var(--font-sans);color:var(--text-body)">{{ L.notif }}</span>
+        
+      </span>
+    </a>
+  </div>
+  <div style="flex:none;padding:10px 20px 10px;text-align:center;font:500 12px var(--font-sans);color:rgba(255,255,255,.85)">{{ L.footer }}</div>
+  <div style="flex:none;height:26px;display:flex;justify-content:center;align-items:flex-start"><span style="width:134px;height:5px;border-radius:3px;background:#fff"></span></div>
+</div></div>
+
+<!-- 3c dashboard -->
+<div class="dv-opt" id="3c"><div class="dv-olabel"><a class="dv-oid" href="#3c">3c</a>Chat · morning brief + dashboard</div>
+<div style="width:390px;height:844px;background:#fff;border-radius:44px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);border:1px solid var(--grey-200)">
+  <div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font:600 15px var(--font-sans);color:var(--navy-900)"><span>8:01 AM</span><span style="width:24px;height:11px;border:1.5px solid var(--navy-900);border-radius:3px;box-sizing:border-box;padding:1px"><span style="display:block;width:70%;height:100%;background:var(--navy-900);border-radius:1px"></span></span></div>
+  <div style="height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--grey-100)">
+    <div style="display:flex;align-items:center;gap:10px"><img src="assets/bloom-b.png" alt="Bloom" style="height:24px;width:auto"><span style="font:700 18px var(--font-sans);color:var(--navy-900);letter-spacing:-0.01em">Bloom Vital</span></div>
+    <div style="display:flex;align-items:center;gap:8px"><x-import component-from-global-scope="BloomDesignSystem_c00213.Badge" tone="neutral" hint-size="110px,22px">{{ L.badge }}</x-import><div role="group" aria-label="Language" style="flex:none;display:flex;padding:3px;border-radius:999px;background:var(--grey-100);color:var(--grey-600)"><button onClick="{{ setEn }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ enBg }};color:{{ enFg }};box-shadow:{{ enSh }};transition:background 120ms">EN</button><button onClick="{{ setEs }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ esBg }};color:{{ esFg }};box-shadow:{{ esSh }};transition:background 120ms">ESP</button></div></div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px">
+    <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:8px"><a href="#3e" style="position:absolute;top:0;right:0;display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:var(--blue-50);color:var(--blue-700);text-decoration:none;font:600 13px var(--font-sans)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><circle cx="17.5" cy="9.5" r="2.5"></circle><path d="M16 14.6a5 5 0 0 1 5.5 5.4"></path></svg>{{ L.family }}</a>
+      <span style="width:64px;height:64px;border-radius:999px;background:#fff;box-shadow:var(--shadow-md);display:flex;align-items:center;justify-content:center"><img src="assets/bloom-b.png" alt="" style="height:34px;width:auto"></span>
+      <span style="font:500 12px var(--font-sans);color:var(--grey-500)">{{ L.today }}</span>
+    </div>
+    <div style="background:var(--blue-50);color:var(--navy-900);padding:14px 16px;border-radius:20px 20px 20px 6px;font:400 18px/1.4 var(--font-sans);align-self:flex-start;max-width:90%">{{ L.greet }}</div>
+    
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:700 15px var(--font-sans);color:var(--navy-900)">{{ L.fromDocs }}</span><span style="font:500 12px var(--font-sans);color:var(--grey-500)">{{ L.rev4 }}</span></div>
+      <div style="height:6px;border-radius:999px;background:var(--grey-100);overflow:hidden"><div style="width:67%;height:100%;background:var(--gradient-bloom);border-radius:999px"></div></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:4px">
+        <div style="border:1px solid var(--grey-200);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px"><span style="font:500 12px var(--font-sans);color:var(--grey-500)">{{ L.glu }}</span><span style="font:700 24px var(--font-sans);color:var(--navy-900)">98 <span style="font:500 13px var(--font-sans);color:var(--grey-500)">mg/dL</span></span><span style="font:600 11px var(--font-sans);color:var(--blue-700)">{{ L.src }} [1]</span></div>
+        <div style="border:1px solid var(--grey-200);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px"><span style="font:500 12px var(--font-sans);color:var(--grey-500)">{{ L.chol }}</span><span style="font:700 24px var(--font-sans);color:var(--navy-900)">210 <span style="font:500 13px var(--font-sans);color:var(--grey-500)">mg/dL</span></span><span style="font:600 11px var(--font-sans);color:var(--blue-700)">{{ L.src }} [2]</span></div>
+        <div style="border:1px solid var(--grey-200);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px"><span style="font:500 12px var(--font-sans);color:var(--grey-500)">{{ L.med }}</span><span style="font:700 18px/1.3 var(--font-sans);color:var(--navy-900)">{{ L.medName }}</span><span style="font:600 11px var(--font-sans);color:var(--blue-700)">{{ L.src }} [3]</span></div>
+        <div style="border:1px solid var(--grey-200);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px"><span style="font:500 12px var(--font-sans);color:var(--grey-500)">{{ L.notes }}</span><span style="font:700 24px var(--font-sans);color:var(--navy-900)">2</span><span style="font:600 11px var(--font-sans);color:var(--grey-500)">{{ L.byYou }}</span></div>
+      </div>
+      
+    </div>
+    <x-import component-from-global-scope="BloomDesignSystem_c00213.Button" variant="primary" size="lg" full-width="{{ true }}" onClick="{{ goReview }}" hint-size="100%,54px">{{ L.keep }}</x-import>
+  </div>
+  <div style="flex:none;padding:8px 20px;text-align:center;font:500 12px var(--font-sans);color:var(--grey-600);background:var(--grey-50);border-top:1px solid var(--grey-100)">{{ L.footer }}</div>
+  <div style="flex:none;height:84px;display:flex;border-top:1px solid var(--grey-200);background:#fff;padding-bottom:20px;box-sizing:border-box">
+    <a href="#3c" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--blue-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Chat</a>
+    <a href="#2a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--grey-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l3 2"></path></svg>Historial / History</a>
+  </div>
+</div></div>
+
+<!-- 3d share -->
+<div class="dv-opt" id="3d"><div class="dv-olabel"><a class="dv-oid" href="#3d">3d</a>History · share by QR or email</div>
+<div style="width:390px;height:844px;background:#fff;border-radius:44px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);border:1px solid var(--grey-200);position:relative">
+  <div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font:600 15px var(--font-sans);color:var(--navy-900)"><span>9:50 AM</span><span style="width:24px;height:11px;border:1.5px solid var(--navy-900);border-radius:3px;box-sizing:border-box;padding:1px"><span style="display:block;width:70%;height:100%;background:var(--navy-900);border-radius:1px"></span></span></div>
+  <div style="height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--grey-100)">
+    <div style="display:flex;align-items:center;gap:10px"><img src="assets/bloom-b.png" alt="Bloom" style="height:24px;width:auto"><x-import component-from-global-scope="BloomDesignSystem_c00213.Badge" tone="neutral" hint-size="110px,22px">Fictional patient</x-import></div>
+    <div style="display:flex;align-items:center;gap:8px"><div role="group" aria-label="Language" style="flex:none;display:flex;padding:3px;border-radius:999px;background:var(--grey-100);color:var(--grey-600)"><button onClick="{{ setEn }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ enBg }};color:{{ enFg }};box-shadow:{{ enSh }};transition:background 120ms">EN</button><button onClick="{{ setEs }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ esBg }};color:{{ esFg }};box-shadow:{{ esSh }};transition:background 120ms">ESP</button></div><a href="#2a" aria-label="Close" style="width:40px;height:40px;border-radius:999px;background:var(--grey-100);display:flex;align-items:center;justify-content:center;color:var(--navy-900)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></a></div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;flex-direction:column;gap:6px"><h1 style="margin:0;font:700 26px/1.2 var(--font-sans);color:var(--navy-900);letter-spacing:-0.02em">Share with your doctor</h1><p style="margin:0;font:400 15px/1.45 var(--font-sans);color:var(--grey-600)">Your doctor keeps the final say. You own your health information.</p></div>
+    <div style="display:flex;padding:4px;background:var(--grey-100);border-radius:12px">
+      <button onClick="{{ shareQr }}" style="all:unset;flex:1;text-align:center;cursor:pointer;height:40px;line-height:40px;border-radius:9px;font:600 15px/40px var(--font-sans);background:{{ qrTabBg }};color:var(--navy-900);box-shadow:{{ qrTabSh }}">QR code</button>
+      <button onClick="{{ shareEmail }}" style="all:unset;flex:1;text-align:center;cursor:pointer;height:40px;border-radius:9px;font:600 15px/40px var(--font-sans);background:{{ emTabBg }};color:var(--navy-900);box-shadow:{{ emTabSh }}">Email</button>
+    </div><div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px;border:1px solid var(--grey-200);border-radius:20px;box-shadow:var(--shadow-md)">
+        <div style="width:220px;height:220px;padding:14px;box-sizing:border-box;display:grid;grid-template-columns:repeat(21,1fr);background:#fff;border-radius:12px">
+          <sc-for list="{{ qr }}" as="c" hint-placeholder-count="0"><span style="background:{{ c.bg }}"></span></sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center"><span style="font:600 18px var(--font-sans);color:var(--navy-900)">Scan to open the brief</span><span style="font:400 14px var(--font-sans);color:var(--grey-600)">Read-only · link expires in 24 h</span></div>
+      </div>
+    <sc-if value="{{ isQr }}" hint-placeholder-val="{{ true }}">
+      
+    </sc-if>
+    <sc-if value="{{ isEmail }}" hint-placeholder-val="{{ false }}">
+      <div style="border:1px solid var(--grey-200);border-radius:20px;box-shadow:var(--shadow-md);display:flex;flex-direction:column;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--grey-100)"><span style="font:500 14px var(--font-sans);color:var(--grey-500);width:56px">To</span><input value="{{ emailTo }}" onChange="{{ onEmailTo }}" placeholder="doctor@clinic.example" style="flex:1;min-width:0;border:none;outline:none;font:500 16px var(--font-sans);color:var(--navy-900);background:transparent"></div>
+        <div style="display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--grey-100)"><span style="font:500 14px var(--font-sans);color:var(--grey-500);width:56px;flex:none">Subject</span><span style="font:500 15px/1.35 var(--font-sans);color:var(--navy-900)">Patient-prepared health brief · Nicolás Herrera Ruiz</span></div>
+        <div style="padding:14px 16px;font:400 15px/1.5 var(--font-sans);color:var(--text-body);display:flex;flex-direction:column;gap:8px"><span>Hello Doctor,</span><span>Attached is a brief I prepared from 3 Mexico City records, with the original Spanish sources. It is not clinically or translation verified.</span><span>Nicolás</span></div>
+        <div style="margin:0 16px 14px;display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--blue-50);border-radius:10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path></svg><span style="font:600 14px var(--font-sans);color:var(--navy-900)">health-brief-herrera.pdf</span></div>
+      </div>
+    </sc-if>
+  </div>
+  <sc-if value="{{ emailSent }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:20px;right:20px;bottom:150px;background:var(--navy-900);color:#fff;border-radius:12px;padding:12px 16px;font:500 14px/1.4 var(--font-sans);box-shadow:var(--shadow-lg)">Sent by you. Nothing else is shared.</div>
+  </sc-if>
+  <sc-if value="{{ isEmail }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:none;display:flex;gap:10px;padding:12px 20px;border-top:1px solid var(--grey-100)">
+      <x-import component-from-global-scope="BloomDesignSystem_c00213.Button" variant="secondary" size="lg" onClick="{{ shareQr }}" hint-size="120px,54px">Not now</x-import>
+      <x-import component-from-global-scope="BloomDesignSystem_c00213.Button" variant="primary" size="lg" disabled="{{ sendDisabled }}" onClick="{{ sendEmail }}" style="flex:1" hint-size="200px,54px">Send</x-import>
+    </div>
+  </sc-if>
+  <div style="flex:none;padding:10px 20px 28px;text-align:center;font:500 13px var(--font-sans);color:var(--grey-600);background:var(--grey-50);border-top:1px solid var(--grey-100)">Not for emergencies. Call 911.</div>
+</div></div>
+
+<!-- 3e family -->
+<div class="dv-opt" id="3e"><div class="dv-olabel"><a class="dv-oid" href="#3e">3e</a>Familia · Paolo is on board</div>
+<div style="width:390px;height:844px;background:#fff;border-radius:44px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);border:1px solid var(--grey-200);position:relative">
+  <div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font:600 15px var(--font-sans);color:var(--navy-900)"><span>10:12 AM</span><span style="width:24px;height:11px;border:1.5px solid var(--navy-900);border-radius:3px;box-sizing:border-box;padding:1px"><span style="display:block;width:70%;height:100%;background:var(--navy-900);border-radius:1px"></span></span></div>
+  <div style="height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--grey-100)">
+    <div style="display:flex;align-items:center;gap:10px"><a href="#3c" aria-label="Volver" style="color:var(--navy-900);display:flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"></path></svg></a><img src="assets/bloom-b.png" alt="Bloom" style="height:24px;width:auto"><span style="font:700 18px var(--font-sans);color:var(--navy-900)">{{ L.family }}</span></div>
+    <div style="display:flex;align-items:center;gap:8px"><x-import component-from-global-scope="BloomDesignSystem_c00213.Badge" tone="neutral" hint-size="110px,22px">{{ L.badge }}</x-import><div role="group" aria-label="Language" style="flex:none;display:flex;padding:3px;border-radius:999px;background:var(--grey-100);color:var(--grey-600)"><button onClick="{{ setEn }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ enBg }};color:{{ enFg }};box-shadow:{{ enSh }};transition:background 120ms">EN</button><button onClick="{{ setEs }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ esBg }};color:{{ esFg }};box-shadow:{{ esSh }};transition:background 120ms">ESP</button></div></div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px">
+    <div style="position:relative;border-radius:20px;background:linear-gradient(160deg,var(--blue-50),#fff);border:1px solid var(--blue-100);padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;overflow:hidden">
+      {{ confetti }}
+      <div style="display:flex;align-items:center">
+        <span style="width:64px;height:64px;border-radius:999px;background:var(--navy-900);color:#fff;display:flex;align-items:center;justify-content:center;font:700 22px var(--font-sans);border:3px solid #fff">NH</span>
+        <span style="width:64px;height:64px;border-radius:999px;background:var(--lima-300);color:var(--navy-900);display:flex;align-items:center;justify-content:center;font:700 22px var(--font-sans);border:3px solid #fff;margin-left:-14px">PH</span>
+      </div>
+      <span style="font:700 24px/1.2 var(--font-sans);color:var(--navy-900)">{{ L.ob1 }} <span style="font:700 32px/1 var(--font-hand);color:var(--blue-600)">{{ L.ob2 }}</span></span>
+      <span style="font:400 15px/1.45 var(--font-sans);color:var(--grey-600);text-wrap:pretty">{{ L.famSub }}</span>
+    </div>
+    <div style="display:flex;flex-direction:column;border:1px solid var(--grey-200);border-radius:16px;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px"><span style="width:40px;height:40px;border-radius:999px;background:var(--navy-900);color:#fff;display:flex;align-items:center;justify-content:center;font:700 14px var(--font-sans)">NH</span><span style="flex:1;display:flex;flex-direction:column"><span style="font:600 16px var(--font-sans);color:var(--navy-900)">Nicolás Herrera Ruiz</span><span style="font:400 13px var(--font-sans);color:var(--grey-500)">{{ L.you }}</span></span></div>
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-top:1px solid var(--grey-100)"><span style="width:40px;height:40px;border-radius:999px;background:var(--lima-300);color:var(--navy-900);display:flex;align-items:center;justify-content:center;font:700 14px var(--font-sans)">PH</span><span style="flex:1;display:flex;flex-direction:column"><span style="font:600 16px var(--font-sans);color:var(--navy-900)">Paolo Herrera</span><span style="font:400 13px var(--font-sans);color:var(--grey-500)">{{ L.son }}</span></span><x-import component-from-global-scope="BloomDesignSystem_c00213.Badge" tone="accent" hint-size="60px,22px">{{ L.isNew }}</x-import></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <x-import component-from-global-scope="BloomDesignSystem_c00213.Button" variant="primary" size="lg" full-width="{{ true }}" hint-size="100%,54px">{{ L.upload }}</x-import>
+      <x-import component-from-global-scope="BloomDesignSystem_c00213.Button" variant="ghost" size="lg" full-width="{{ true }}" onClick="{{ celebrate }}" hint-size="100%,54px">{{ L.addFam }}</x-import>
+    </div>
+  </div>
+  <div style="flex:none;padding:8px 20px;text-align:center;font:500 12px var(--font-sans);color:var(--grey-600);background:var(--grey-50);border-top:1px solid var(--grey-100)">{{ L.footer }}</div>
+  <div style="flex:none;height:84px;display:flex;border-top:1px solid var(--grey-200);background:#fff;padding-bottom:20px;box-sizing:border-box">
+    <a href="#3c" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--blue-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Chat</a>
+    <a href="#2a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--grey-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l3 2"></path></svg>Historial / History</a>
+  </div>
+</div></div>
+
+</div>
+<p class="dv-next">Try next: "use <a class="dv-oid" href="#3c">3c</a> as the new Chat opening instead of <a class="dv-oid" href="#1a">1a</a>" · "add the QR/email option to <a class="dv-oid" href="#2c">2c</a>" · "turn 3a→3e into a 30-sec promo animation"</p>
+</section>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Tab 1 · Chat (español)</span></div>
+<div class="dv-opts">
+
+<!-- 1a -->
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Apertura · primer dato</div>
+<div style="width:390px;height:844px;background:#fff;border-radius:44px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);border:1px solid var(--grey-200)">
+  <div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font:600 15px var(--font-sans);color:var(--navy-900)"><span>9:41 AM</span><span style="width:24px;height:11px;border:1.5px solid var(--navy-900);border-radius:3px;box-sizing:border-box;padding:1px"><span style="display:block;width:70%;height:100%;background:var(--navy-900);border-radius:1px"></span></span></div>
+  <div style="height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--grey-100)">
+    <div style="display:flex;align-items:center;gap:10px"><img src="assets/bloom-b.png" alt="Bloom" style="height:24px;width:auto"><span style="font:700 18px var(--font-sans);color:var(--navy-900);letter-spacing:-0.01em">Bloom Vital</span></div>
+    <div style="display:flex;align-items:center;gap:8px"><x-import component-from-global-scope="BloomDesignSystem_c00213.Badge" tone="neutral" hint-size="110px,22px">{{ L.badge }}</x-import><div role="group" aria-label="Language" style="flex:none;display:flex;padding:3px;border-radius:999px;background:var(--grey-100);color:var(--grey-600)"><button onClick="{{ setEn }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ enBg }};color:{{ enFg }};box-shadow:{{ enSh }};transition:background 120ms">EN</button><button onClick="{{ setEs }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ esBg }};color:{{ esFg }};box-shadow:{{ esSh }};transition:background 120ms">ESP</button></div></div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px">
+    <div style="font:500 12px var(--font-sans);color:var(--grey-500);text-align:center">{{ L.today }}</div>
+    <div style="display:flex;flex-direction:column;gap:6px;align-self:flex-start;max-width:88%">
+      <span style="font:600 12px var(--font-sans);color:var(--grey-500)">Bloom Vital</span>
+      <div style="background:var(--blue-50);color:var(--navy-900);padding:14px 16px;border-radius:20px 20px 20px 6px;font:400 17px/1.45 var(--font-sans);text-wrap:pretty">{{ L.open }}</div>
+    </div>
+    <div style="align-self:flex-end;width:82%;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:#fff;border:1px solid var(--grey-200);border-radius:14px;box-shadow:var(--shadow-sm);width:100%;box-sizing:border-box"><span style="width:40px;height:40px;flex:none;border-radius:10px;background:var(--blue-50);color:var(--blue-700);display:flex;align-items:center;justify-content:center;font:700 11px var(--font-sans);letter-spacing:0.04em">PDF</span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font:600 15px/1.3 var(--font-sans);color:var(--navy-900)">{{ L.file1 }}</span><span style="font:400 12px var(--font-sans);color:var(--grey-500)">{{ L.file1m }}</span></span></div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:#fff;border:1px solid var(--grey-200);border-radius:14px;box-shadow:var(--shadow-sm);width:100%;box-sizing:border-box"><span style="width:40px;height:40px;flex:none;border-radius:10px;background:var(--blue-50);color:var(--blue-700);display:flex;align-items:center;justify-content:center;font:700 11px var(--font-sans);letter-spacing:0.04em">JPG</span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font:600 15px/1.3 var(--font-sans);color:var(--navy-900)">{{ L.file2 }}</span><span style="font:400 12px var(--font-sans);color:var(--grey-500)">{{ L.file2m }}</span></span></div>
+      <div style="background:var(--navy-900);color:#fff;padding:14px 16px;border-radius:20px 20px 6px 20px;font:400 17px/1.45 var(--font-sans);text-wrap:pretty">{{ L.dizzy }}</div>
+      <span style="display:flex;align-items:center;gap:4px;font:500 12px var(--font-sans);color:var(--grey-500)">{{ L.sentLbl }}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue-500)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+    </div>
+  </div>
+  <div style="flex:none;display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid var(--grey-100)">
+    <button aria-label="Adjuntar" style="width:44px;height:44px;flex:none;border:1px solid var(--grey-300);border-radius:999px;background:#fff;color:var(--navy-700);display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:var(--blue-50)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <input placeholder="{{ L.ph1 }}" style="flex:1;min-width:0;height:48px;box-sizing:border-box;border:1px solid var(--grey-300);border-radius:999px;padding:0 18px;font:400 17px var(--font-sans);color:var(--navy-900);outline:none;background:var(--grey-50)">
+    <button aria-label="Enviar" style="width:48px;height:48px;flex:none;border:none;border-radius:999px;background:var(--blue-500);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:var(--blue-600)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg></button>
+  </div>
+  <div style="flex:none;padding:8px 20px;text-align:center;font:500 12px var(--font-sans);color:var(--grey-600);background:var(--grey-50);border-top:1px solid var(--grey-100)">{{ L.footer }}</div>
+  <div style="flex:none;height:84px;display:flex;border-top:1px solid var(--grey-200);background:#fff;padding-bottom:20px;box-sizing:border-box">
+    <a href="#1a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--blue-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Chat</a>
+    <a href="#2a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--grey-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l3 2"></path></svg>Historial / History</a>
+  </div>
+</div></div>
+
+<!-- 1b -->
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Alertas y notas</div>
+<div style="width:390px;height:844px;background:#fff;border-radius:44px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);border:1px solid var(--grey-200)">
+  <div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font:600 15px var(--font-sans);color:var(--navy-900)"><span>9:42 AM</span><span style="width:24px;height:11px;border:1.5px solid var(--navy-900);border-radius:3px;box-sizing:border-box;padding:1px"><span style="display:block;width:70%;height:100%;background:var(--navy-900);border-radius:1px"></span></span></div>
+  <div style="height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--grey-100)">
+    <div style="display:flex;align-items:center;gap:10px"><img src="assets/bloom-b.png" alt="Bloom" style="height:24px;width:auto"><span style="font:700 18px var(--font-sans);color:var(--navy-900);letter-spacing:-0.01em">Bloom Vital</span></div>
+    <div style="display:flex;align-items:center;gap:8px"><x-import component-from-global-scope="BloomDesignSystem_c00213.Badge" tone="neutral" hint-size="110px,22px">{{ L.badge }}</x-import><div role="group" aria-label="Language" style="flex:none;display:flex;padding:3px;border-radius:999px;background:var(--grey-100);color:var(--grey-600)"><button onClick="{{ setEn }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ enBg }};color:{{ enFg }};box-shadow:{{ enSh }};transition:background 120ms">EN</button><button onClick="{{ setEs }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ esBg }};color:{{ esFg }};box-shadow:{{ esSh }};transition:background 120ms">ESP</button></div></div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px">
+    <div style="background:#fff;border:1px solid var(--grey-200);border-radius:16px;box-shadow:var(--shadow-sm);padding:18px;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:600 12px var(--font-sans);color:var(--blue-700);letter-spacing:0.04em;text-transform:uppercase">{{ L.allergies }}</span><x-import component-from-global-scope="BloomDesignSystem_c00213.Badge" tone="danger" dot="{{ true }}" hint-size="90px,22px">{{ L.forbidden }}</x-import></div>
+      <div style="display:flex;flex-direction:column"><span style="font:600 20px/1.3 var(--font-sans);color:var(--navy-900);padding:6px 0">{{ L.shellfish }}</span><span style="font:600 20px/1.3 var(--font-sans);color:var(--navy-900);padding:6px 0;border-top:1px solid var(--grey-100)">{{ L.almonds }}</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;align-self:flex-end;max-width:85%;align-items:flex-end">
+      <span style="font:600 12px var(--font-sans);color:var(--grey-500)">{{ L.noteLbl }}</span>
+      <div style="background:var(--navy-900);color:#fff;padding:14px 16px;border-radius:20px 20px 6px 20px;font:400 17px/1.45 var(--font-sans);text-wrap:pretty">{{ L.hives }}</div>
+    </div>
+    <div style="align-self:flex-end;max-width:85%;background:var(--navy-900);color:#fff;padding:14px 16px;border-radius:20px 20px 6px 20px;font:400 17px/1.45 var(--font-sans);text-wrap:pretty">{{ L.cramps }}</div>
+    <div style="display:flex;flex-direction:column;gap:6px;align-self:flex-start;max-width:85%">
+      <div style="background:var(--blue-50);color:var(--navy-900);padding:12px 16px;border-radius:20px 20px 20px 6px;font:400 17px/1.45 var(--font-sans)">{{ L.saved }}</div>
+      <span style="font:500 12px var(--font-sans);color:var(--grey-500);padding-left:4px">{{ L.reported }}</span>
+    </div>
+    <sc-for list="{{ sent }}" as="m" hint-placeholder-count="0">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="align-self:flex-end;max-width:85%;background:var(--navy-900);color:#fff;padding:14px 16px;border-radius:20px 20px 6px 20px;font:400 17px/1.45 var(--font-sans)">{{ m.text }}</div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-self:flex-start;max-width:85%">
+          <div style="background:var(--blue-50);color:var(--navy-900);padding:12px 16px;border-radius:20px 20px 20px 6px;font:400 17px/1.45 var(--font-sans)">{{ L.saved }}</div>
+          <span style="font:500 12px var(--font-sans);color:var(--grey-500);padding-left:4px">{{ L.reported }}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="flex:none;display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid var(--grey-100)">
+    <input value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onDraftKey }}" placeholder="{{ L.ph2 }}" style="flex:1;min-width:0;height:48px;box-sizing:border-box;border:1px solid var(--grey-300);border-radius:999px;padding:0 18px;font:400 17px var(--font-sans);color:var(--navy-900);outline:none;background:var(--grey-50)">
+    <button onClick="{{ send }}" aria-label="Enviar" style="width:48px;height:48px;flex:none;border:none;border-radius:999px;background:var(--blue-500);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:var(--blue-600)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg></button>
+  </div>
+  <div style="flex:none;padding:8px 20px;text-align:center;font:500 12px var(--font-sans);color:var(--grey-600);background:var(--grey-50);border-top:1px solid var(--grey-100)">{{ L.footer }}</div>
+  <div style="flex:none;height:84px;display:flex;border-top:1px solid var(--grey-200);background:#fff;padding-bottom:20px;box-sizing:border-box">
+    <a href="#1a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--blue-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Chat</a>
+    <a href="#2a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--grey-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l3 2"></path></svg>Historial / History</a>
+  </div>
+</div></div>
+
+<!-- 1c -->
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Confirmar</div>
+<div style="width:390px;height:844px;background:#fff;border-radius:44px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);border:1px solid var(--grey-200)">
+  <div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font:600 15px var(--font-sans);color:var(--navy-900)"><span>9:45 AM</span><span style="width:24px;height:11px;border:1.5px solid var(--navy-900);border-radius:3px;box-sizing:border-box;padding:1px"><span style="display:block;width:70%;height:100%;background:var(--navy-900);border-radius:1px"></span></span></div>
+  <div style="height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--grey-100)">
+    <div style="display:flex;align-items:center;gap:10px"><img src="assets/bloom-b.png" alt="Bloom" style="height:24px;width:auto"><span style="font:700 18px var(--font-sans);color:var(--navy-900);letter-spacing:-0.01em">Bloom Vital</span></div>
+    <div style="display:flex;align-items:center;gap:8px"><x-import component-from-global-scope="BloomDesignSystem_c00213.Badge" tone="neutral" hint-size="110px,22px">{{ L.badge }}</x-import><div role="group" aria-label="Language" style="flex:none;display:flex;padding:3px;border-radius:999px;background:var(--grey-100);color:var(--grey-600)"><button onClick="{{ setEn }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ enBg }};color:{{ enFg }};box-shadow:{{ enSh }};transition:background 120ms">EN</button><button onClick="{{ setEs }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ esBg }};color:{{ esFg }};box-shadow:{{ esSh }};transition:background 120ms">ESP</button></div></div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;justify-content:flex-end;gap:16px">
+    <div style="align-self:center;display:flex;align-items:center;gap:8px;font:600 13px var(--font-sans);color:var(--green-500);background:var(--green-50);padding:6px 14px;border-radius:999px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{ L.rev6 }}</div>
+    <div style="background:#fff;border:1px solid var(--grey-200);border-radius:16px;box-shadow:var(--shadow-md);overflow:hidden;display:flex;flex-direction:column">
+      <div style="height:6px;background:var(--gradient-bloom)"></div>
+      <div style="padding:22px 20px;display:flex;flex-direction:column;gap:18px">
+        <button onClick="{{ toggleAck }}" style="all:unset;cursor:pointer;display:flex;align-items:flex-start;gap:14px">
+          <span style="width:28px;height:28px;flex:none;border-radius:8px;border:2px solid {{ ackBorder }};background:{{ ackBg }};display:flex;align-items:center;justify-content:center;transition:all 120ms;box-sizing:border-box"><svg width="16" height="16" viewBox="0 0 12 12" fill="none" style="opacity:{{ ackOpacity }}"><path d="M2.5 6.2l2.3 2.3 4.7-5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+          <span style="display:flex;flex-direction:column;gap:6px"><span style="font:600 20px var(--font-sans);color:var(--navy-900)">{{ L.translate }}</span><span style="font:400 16px/1.45 var(--font-sans);color:var(--text-body);text-wrap:pretty">{{ L.disclaimer }}</span></span>
+        </button>
+        <x-import component-from-global-scope="BloomDesignSystem_c00213.Button" variant="primary" size="lg" full-width="{{ true }}" disabled="{{ ctaDisabled }}" onClick="{{ createSummary }}" hint-size="100%,54px">US medical history</x-import>
+      </div>
+    </div>
+  </div>
+  <div style="flex:none;padding:8px 20px;text-align:center;font:500 12px var(--font-sans);color:var(--grey-600);background:var(--grey-50);border-top:1px solid var(--grey-100)">{{ L.footer }}</div>
+  <div style="flex:none;height:84px;display:flex;border-top:1px solid var(--grey-200);background:#fff;padding-bottom:20px;box-sizing:border-box">
+    <a href="#1a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--blue-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Chat</a>
+    <a href="#2a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--grey-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l3 2"></path></svg>Historial / History</a>
+  </div>
+</div></div>
+
+</div>
+<p class="dv-next">Try next: "add the screens for facts 2–3 between <a class="dv-oid" href="#1a">1a</a> and <a class="dv-oid" href="#1b">1b</a>" · "make patient bubbles cyan instead of navy"</p>
+</section>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Tab 2 · History (English, for the doctor)</span></div>
+<div class="dv-opts">
+
+<!-- 2a -->
+<div class="dv-opt" id="2a"><div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Summary</div>
+<div style="width:390px;height:844px;background:#fff;border-radius:44px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);border:1px solid var(--grey-200);position:relative">
+  <div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font:600 15px var(--font-sans);color:var(--navy-900)"><span>9:46 AM</span><span style="width:24px;height:11px;border:1.5px solid var(--navy-900);border-radius:3px;box-sizing:border-box;padding:1px"><span style="display:block;width:70%;height:100%;background:var(--navy-900);border-radius:1px"></span></span></div>
+  <div style="height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--grey-100)">
+    <div style="display:flex;align-items:center;gap:10px"><img src="assets/bloom-b.png" alt="Bloom" style="height:24px;width:auto"><span style="font:700 18px var(--font-sans);color:var(--navy-900);letter-spacing:-0.01em">Bloom Vital</span></div>
+    <div style="display:flex;align-items:center;gap:8px"><x-import component-from-global-scope="BloomDesignSystem_c00213.Badge" tone="neutral" hint-size="110px,22px">Fictional patient</x-import><div role="group" aria-label="Language" style="flex:none;display:flex;padding:3px;border-radius:999px;background:var(--grey-100);color:var(--grey-600)"><button onClick="{{ setEn }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ enBg }};color:{{ enFg }};box-shadow:{{ enSh }};transition:background 120ms">EN</button><button onClick="{{ setEs }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ esBg }};color:{{ esFg }};box-shadow:{{ esSh }};transition:background 120ms">ESP</button></div></div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:22px 20px 16px;display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font:600 13px var(--font-sans);color:var(--grey-500)">Nicolás Herrera Ruiz</span>
+      <h1 style="margin:0;font:700 26px/1.2 var(--font-sans);color:var(--navy-900);letter-spacing:-0.02em;text-wrap:balance">Bloom Vital medical record</h1>
+      <p style="margin:0;font:400 15px/1.45 var(--font-sans);color:var(--grey-600);text-wrap:pretty">Not clinically or translation verified.</p>
+    </div>
+    <div style="border:1px solid var(--grey-200);border-radius:16px;padding:0 16px;box-shadow:var(--shadow-sm)">
+      <sc-for list="{{ rowsA }}" as="row" hint-placeholder-count="6">
+        <div style="border-top:{{ row.border }}">
+          <button onClick="{{ row.toggle }}" style="all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:10px;padding:14px 0;cursor:pointer">
+            <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+              <span style="font:600 13px var(--font-sans);color:{{ row.labelColor }}">{{ row.label }}</span>
+              <span style="font:500 16px/1.35 var(--font-sans);color:var(--navy-900);white-space:{{ row.ws }};overflow:hidden;text-overflow:ellipsis">{{ row.value }}</span>
+            </span>
+            <span style="flex:none;display:flex;align-items:center;gap:2px;font:600 12px var(--font-sans);color:var(--blue-600)">{{ row.cta }}<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="transform:{{ row.rot }};transition:transform 200ms"><path d="M9 6l6 6-6 6"></path></svg></span>
+          </button>
+          <sc-if value="{{ row.open }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:0 0 14px;font:500 13px/1.4 var(--font-sans);color:var(--grey-600)">{{ row.detail }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <sc-if value="{{ exported }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:20px;right:20px;bottom:236px;background:var(--navy-900);color:#fff;border-radius:12px;padding:12px 16px;font:500 14px/1.4 var(--font-sans);box-shadow:var(--shadow-lg)">PDF saved to this phone. Nothing is sent automatically.</div>
+  </sc-if>
+  <div style="flex:none;display:flex;gap:10px;padding:12px 20px;border-top:1px solid var(--grey-100)">
+    <x-import component-from-global-scope="BloomDesignSystem_c00213.Button" variant="primary" size="lg" onClick="{{ goDoctor }}" style="flex:1" hint-size="230px,54px">US doctor</x-import><x-import component-from-global-scope="BloomDesignSystem_c00213.Button" variant="secondary" size="lg" onClick="{{ doExport }}" hint-size="110px,54px">Export</x-import>
+    
+  </div>
+  <div style="flex:none;padding:8px 20px;text-align:center;font:500 12px var(--font-sans);color:var(--grey-600);background:var(--grey-50);border-top:1px solid var(--grey-100)">Not for emergencies. Call 911.</div>
+  <div style="flex:none;height:84px;display:flex;border-top:1px solid var(--grey-200);background:#fff;padding-bottom:20px;box-sizing:border-box">
+    <a href="#1a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--grey-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Chat</a>
+    <a href="#2a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--blue-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l3 2"></path></svg>Historial / History</a>
+  </div>
+</div></div>
+
+<!-- 2b -->
+<div class="dv-opt" id="2b"><div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>Expanded row · Recent labs</div>
+<div style="width:390px;height:844px;background:#fff;border-radius:44px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);border:1px solid var(--grey-200)">
+  <div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font:600 15px var(--font-sans);color:var(--navy-900)"><span>9:47 AM</span><span style="width:24px;height:11px;border:1.5px solid var(--navy-900);border-radius:3px;box-sizing:border-box;padding:1px"><span style="display:block;width:70%;height:100%;background:var(--navy-900);border-radius:1px"></span></span></div>
+  <div style="height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--grey-100)">
+    <div style="display:flex;align-items:center;gap:10px"><img src="assets/bloom-b.png" alt="Bloom" style="height:24px;width:auto"><span style="font:700 18px var(--font-sans);color:var(--navy-900);letter-spacing:-0.01em">Bloom Vital</span></div>
+    <div style="display:flex;align-items:center;gap:8px"><x-import component-from-global-scope="BloomDesignSystem_c00213.Badge" tone="neutral" hint-size="110px,22px">Fictional patient</x-import><div role="group" aria-label="Language" style="flex:none;display:flex;padding:3px;border-radius:999px;background:var(--grey-100);color:var(--grey-600)"><button onClick="{{ setEn }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ enBg }};color:{{ enFg }};box-shadow:{{ enSh }};transition:background 120ms">EN</button><button onClick="{{ setEs }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ esBg }};color:{{ esFg }};box-shadow:{{ esSh }};transition:background 120ms">ESP</button></div></div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:18px 20px 16px;display:flex;flex-direction:column;gap:14px">
+    <h1 style="margin:0;font:700 22px/1.2 var(--font-sans);color:var(--navy-900);letter-spacing:-0.02em">Bloom Vital medical record</h1>
+    <div style="border:1px solid var(--grey-200);border-radius:16px;padding:0 16px;box-shadow:var(--shadow-sm)">
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 0">
+        <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:600 13px var(--font-sans);color:var(--grey-500)">Current medications</span><span style="font:500 16px var(--font-sans);color:var(--navy-900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Losartan 50 mg, once daily [3]</span></span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-600)" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"></path></svg>
+      </div>
+      <div style="border-top:1px solid var(--grey-100);margin:0 -16px;padding:14px 16px 16px;background:var(--blue-50);display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font:700 15px var(--font-sans);color:var(--navy-900)">Recent labs</span><span style="display:flex;align-items:center;gap:2px;font:600 12px var(--font-sans);color:var(--blue-600)">Show less<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="transform:rotate(90deg)"><path d="M9 6l6 6-6 6"></path></svg></span></div>
+        <div style="background:#fff;border-radius:12px;border:1px solid var(--blue-100);display:flex;flex-direction:column">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:12px 14px">
+            <span style="font:500 14px var(--font-sans);color:var(--grey-600)">Fasting glucose</span><span style="font:600 12px var(--font-sans);color:var(--blue-700);text-align:right">[1]</span>
+            <span style="font:700 22px var(--font-sans);color:var(--navy-900)">98 <span style="font:500 15px var(--font-sans);color:var(--grey-600)">mg/dL</span></span><span></span>
+          </div>
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:12px 14px;border-top:1px solid var(--grey-100)">
+            <span style="font:500 14px var(--font-sans);color:var(--grey-600)">Total cholesterol</span><span style="font:600 12px var(--font-sans);color:var(--blue-700);text-align:right">[2]</span>
+            <span style="font:700 22px var(--font-sans);color:var(--navy-900)">210 <span style="font:500 15px var(--font-sans);color:var(--grey-600)">mg/dL</span></span><span></span>
+          </div>
+          <div style="padding:12px 14px;border-top:1px solid var(--grey-100);display:flex;flex-direction:column;gap:6px">
+            <span style="font:500 14px var(--font-sans);color:var(--grey-600)">Date as written</span>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font:700 18px var(--font-mono);color:var(--navy-900)">12/03/2026</span></div>
+          </div>
+        </div>
+      </div>
+      <sc-for list="{{ rowsB }}" as="row" hint-placeholder-count="4">
+        <div style="display:flex;align-items:center;gap:10px;padding:14px 0;border-top:1px solid var(--grey-100)">
+          <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:600 13px var(--font-sans);color:var(--grey-500)">{{ row.label }}</span><span style="font:500 16px var(--font-sans);color:var(--navy-900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ row.value }}</span></span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-600)" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"></path></svg>
+        </div>
+      </sc-for>
+    </div>
+    <div style="border:1px solid var(--grey-200);border-radius:16px;overflow:hidden">
+      <button onClick="{{ toggleAppendix }}" style="all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;background:var(--grey-50)">
+        <span style="flex:1;font:600 15px var(--font-sans);color:var(--navy-900)">Source appendix (original Spanish)</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-600)" stroke-width="2" stroke-linecap="round" style="transform:{{ appendixRot }};transition:transform 200ms"><path d="M9 6l6 6-6 6"></path></svg>
+      </button>
+      <sc-if value="{{ appendix }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ sources }}" as="s" hint-placeholder-count="5">
+            <div lang="es" style="display:grid;grid-template-columns:32px minmax(0,1fr);gap:2px 8px;padding:12px 16px;border-top:1px solid var(--grey-100)">
+              <span style="font:700 13px var(--font-mono);color:var(--blue-700)">{{ s.n }}</span><span style="font:600 13px var(--font-sans);color:var(--grey-600)">{{ s.doc }}</span>
+              <span></span><span style="font:400 14px/1.4 var(--font-sans);color:var(--navy-900)">{{ s.text }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+  <div style="flex:none;display:flex;gap:10px;padding:12px 20px;border-top:1px solid var(--grey-100)">
+    <x-import component-from-global-scope="BloomDesignSystem_c00213.Button" variant="primary" size="lg" onClick="{{ goDoctor }}" style="flex:1" hint-size="230px,54px">US doctor</x-import>
+    <x-import component-from-global-scope="BloomDesignSystem_c00213.Button" variant="secondary" size="lg" onClick="{{ doExport }}" hint-size="110px,54px">Export</x-import>
+  </div>
+  <div style="flex:none;padding:8px 20px;text-align:center;font:500 12px var(--font-sans);color:var(--grey-600);background:var(--grey-50);border-top:1px solid var(--grey-100)">Not for emergencies. Call 911.</div>
+  <div style="flex:none;height:84px;display:flex;border-top:1px solid var(--grey-200);background:#fff;padding-bottom:20px;box-sizing:border-box">
+    <a href="#1a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--grey-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Chat</a>
+    <a href="#2a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:var(--blue-500);font:600 12px var(--font-sans)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l3 2"></path></svg>Historial / History</a>
+  </div>
+</div></div>
+
+<!-- 2c -->
+<div class="dv-opt" id="2c"><div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>Show to my doctor · full screen</div>
+<div style="width:390px;height:844px;background:#fff;border-radius:44px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);border:1px solid var(--grey-200)">
+  <div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font:600 15px var(--font-sans);color:var(--navy-900)"><span>9:48 AM</span><span style="width:24px;height:11px;border:1.5px solid var(--navy-900);border-radius:3px;box-sizing:border-box;padding:1px"><span style="display:block;width:70%;height:100%;background:var(--navy-900);border-radius:1px"></span></span></div>
+  <div style="height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--grey-100)">
+    <div style="display:flex;align-items:center;gap:10px"><img src="assets/bloom-b.png" alt="Bloom" style="height:24px;width:auto"><x-import component-from-global-scope="BloomDesignSystem_c00213.Badge" tone="neutral" hint-size="110px,22px">Fictional patient</x-import></div>
+    <div style="display:flex;align-items:center;gap:8px"><div role="group" aria-label="Language" style="flex:none;display:flex;padding:3px;border-radius:999px;background:var(--grey-100);color:var(--grey-600)"><button onClick="{{ setEn }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ enBg }};color:{{ enFg }};box-shadow:{{ enSh }};transition:background 120ms">EN</button><button onClick="{{ setEs }}" style="all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);letter-spacing:0.02em;background:{{ esBg }};color:{{ esFg }};box-shadow:{{ esSh }};transition:background 120ms">ESP</button></div><a href="#2a" aria-label="Close" style="width:40px;height:40px;border-radius:999px;background:var(--grey-100);display:flex;align-items:center;justify-content:center;color:var(--navy-900)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></a></div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:18px 20px 20px;display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;gap:14px;align-items:flex-start">
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+        
+        <span style="font:500 14px/1.4 var(--font-sans);color:var(--grey-600)"><br></span><span style="font:700 24px/1.15 var(--font-sans);color:var(--navy-900);letter-spacing:-0.02em">Nicolás Herrera Ruiz</span>
+      </div>
+      <div style="flex:none;width:76px;height:76px;padding:5px;box-sizing:border-box;border:1px solid var(--grey-200);border-radius:10px;display:grid;grid-template-columns:repeat(21,1fr)">
+        <sc-for list="{{ qr }}" as="c" hint-placeholder-count="0"><span style="background:{{ c.bg }}"></span></sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column">
+      <sc-for list="{{ rowsDoc }}" as="row" hint-placeholder-count="5">
+        <div style="padding:12px 0;border-top:1px solid var(--grey-200);display:flex;flex-direction:column;gap:4px">
+          <span style="font:600 13px var(--font-sans);color:var(--blue-700);letter-spacing:0.04em;text-transform:uppercase">{{ row.label }}</span>
+          <span style="font:500 {{ docSize }}/1.3 var(--font-sans);color:var(--navy-900);text-wrap:pretty">{{ row.value }} <span style="color:var(--blue-600)">{{ row.src }}</span></span>
+        </div>
+      </sc-for>
+    </div>
+    
+  </div>
+  
+</div></div>
+
+</div>
+<p class="dv-next">Try next: "make <a class="dv-oid" href="#2c">2c</a> landscape for a desk" · "add a print/PDF version of <a class="dv-oid" href="#2a">2a</a>"</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;requireAck&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;doctorTextSize&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:20,&quot;min&quot;:17,&quot;max&quot;:28,&quot;step&quot;:1,&quot;unit&quot;:&quot;px&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Doctor view&quot;}}">
+class Component extends DCLogic {
+  state = { c1: false, note1Open: false, noteDraft: '', notes1: [], src4: false, draft: '', sent: [], ack: false, open: {}, appendix: true, exported: false, q: 0, speaking: false, lang: 'es', share: 'qr', emailTo: '', emailSent: false, burst: 1 };
+
+  confettiEl() {
+    const cols = ['#16aad3', '#e0e657', '#001f4b', '#a9dcec', '#3fb5d8'];
+    const kids = [];
+    for (let i = 0; i < 36; i++) {
+      const h = (i * 37) % 100;
+      kids.push(React.createElement('span', { key: i, style: {
+        position: 'absolute', left: h + '%', top: -12, width: 6 + (i % 3) * 2, height: 10 - (i % 3) * 2,
+        background: cols[i % cols.length], borderRadius: i % 4 === 0 ? 999 : 2, opacity: 0,
+        animation: `bvFall ${1.6 + (i % 5) * 0.25}s ${(i % 9) * 0.06}s cubic-bezier(.2,.7,.3,1) forwards`,
+      } }));
+    }
+    return React.createElement('div', { key: this.state.burst, 'aria-hidden': true, style: { position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' } }, kids);
+  }
+
+  i18n = {
+    es: { badge: 'Paciente ficticio', footer: 'No es para emergencias. Llama al 911.', tag1: 'Tu historial médico,', tag2: 'donde vayas', own1: 'Tu médico tiene la última palabra.', own2: 'Tú eres dueño de tu información.', start: 'Comenzar',
+      date: 'sábado, 24 de octubre', now: 'ahora', notif: '¡Buenos días, Nicolás! Hoy es tu consulta médica. Revisa la información que tenemos hasta el momento.',
+      today: 'Hoy', greet: '¡Buenos días, Nicolás! Los documentos están listos. Los puedes revisar aquí.', fromDocs: 'De tus documentos', rev4: '4 de 6 revisados', glu: 'Glucosa en ayunas', chol: 'Colesterol total', med: 'Medicamento', medName: 'Losartán 50 mg', notes: 'Tus notas', byYou: 'Reportado por ti', src: 'Fuente', keep: 'Seguir revisando', family: 'Familia',
+      ob1: '¡Paolo está', ob2: 'a bordo!', famSub: 'Ahora puedes guardar y revisar sus documentos junto a los tuyos.', you: 'Tú · 3 documentos', son: 'Hijo · sin documentos aún', isNew: 'Nuevo', upload: 'Subir documentos de Paolo', addFam: 'Agregar otro familiar',
+      open: 'Hola, Nicolás. Comencemos. Agrega la información médica que tengas a la mano. Revisémosla juntos.', file1: 'Receta · Endocrinólogo', file1m: 'PDF · 1 página', file2: 'Diagnóstico · Hospital México', file2m: 'Imagen · JPG', dizzy: 'Ayer me sentí un poco mareado durante el trabajo.', sentLbl: 'Enviado', ph1: 'Escribe o adjunta…',
+      allergies: 'Alergias', forbidden: 'Prohibido', shellfish: 'Mariscos', almonds: 'Almendras', noteLbl: 'Nota del paciente', hives: 'Me enronché cuando comí mariscos en la playa en el 2015.', cramps: 'Hoy sentí calambres detrás de la pierna izquierda.', saved: 'Guardado, Nicolás.', reported: 'Reportado el 24 oct 2026', ph2: 'Escribe un mensaje…',
+      rev6: '6 de 6 datos revisados', translate: 'Traducir', disclaimer: 'Esto no es una verificación médica ni una traducción certificada.' },
+    en: { badge: 'Fictional patient', footer: 'Not for emergencies. Call 911.', tag1: 'Your medical history,', tag2: 'wherever you go', own1: 'Your doctor keeps the final say.', own2: 'You own your health information.', start: 'Get started',
+      date: 'Saturday, October 24', now: 'now', notif: 'Good morning, Nicolás! Today is your doctor visit. Review the information we have so far.',
+      today: 'Today', greet: 'Good morning, Nicolás! Your documents are ready. You can review them here.', fromDocs: 'From your documents', rev4: '4 of 6 reviewed', glu: 'Fasting glucose', chol: 'Total cholesterol', med: 'Medication', medName: 'Losartan 50 mg', notes: 'Your notes', byYou: 'Reported by you', src: 'Source', keep: 'Keep reviewing', family: 'Family',
+      ob1: 'Paolo is', ob2: 'on board!', famSub: 'Now you can save and review his documents alongside yours.', you: 'You · 3 documents', son: 'Son · no documents yet', isNew: 'New', upload: "Upload Paolo's documents", addFam: 'Add another family member',
+      open: "Hi, Nicolás. Let's get started. Add any medical information you have on hand. We'll review it together.", file1: 'Prescription · Endocrinologist', file1m: 'PDF · 1 page', file2: 'Diagnosis · Hospital México', file2m: 'Image · JPG', dizzy: 'Yesterday I felt a little dizzy at work.', sentLbl: 'Sent', ph1: 'Type or attach…',
+      allergies: 'Allergies', forbidden: 'Prohibited', shellfish: 'Shellfish', almonds: 'Almonds', noteLbl: 'Patient note', hives: 'I broke out in hives when I ate shellfish at the beach in 2015.', cramps: 'Today I felt cramps behind my left leg.', saved: 'Saved, Nicolás.', reported: 'Reported Oct 24, 2026', ph2: 'Type a message…',
+      rev6: '6 of 6 facts reviewed', translate: 'Translate', disclaimer: 'This is not a medical verification or a certified translation.' },
+  };
+
+  rows = [
+    { id: 'meds', label: 'Current medications', value: 'Losartan 50 mg [3]', detail: 'Source [3] · Prescription · 05/04/2026 as written' },
+    { id: 'labs', label: 'Recent labs', value: 'Fasting glucose 98 mg/dL [1]\nCholesterol 210 mg/dL[2]', detail: 'Sources [1][2] · Lab reports · Day/month order of the date is unclear' },
+    { id: 'past', label: 'Past conditions and procedures', value: 'Hypertension; appendectomy, 2015 [5]', detail: 'Source [5] · Medical history' },
+    { id: 'all', label: 'Allergies', value: 'Shellfish (mariscos), almonds (almendras)', detail: 'Patient-reported: hives after eating shellfish at the beach, 2015.' },
+    { id: 'miss', label: 'Missing or unclear', value: '', detail: 'Source [4] · Visit note · Could be June 3 or March 6' },
+    { id: 'pr', label: 'Patient-reported', value: 'Cramps behind left leg, Oct 24, 2026', detail: 'Entered by the patient in chat. Not from records.', pr: true },
+  ];
+  sources = [
+    { n: '[1]', doc: 'Informe de laboratorio', text: '“Glucosa en ayunas: 98 mg/dL. Fecha: 12/03/2026”' },
+    { n: '[2]', doc: 'Informe de laboratorio', text: '“Colesterol total: 210 mg/dL. Fecha: 12/03/2026”' },
+    { n: '[3]', doc: 'Receta · 05/04/2026', text: '“Losartán 50 mg, tomar 1 tab c/24 h”' },
+    { n: '[4]', doc: 'Nota de consulta', text: '“Consulta general. Fecha: 03/06/25”' },
+    { n: '[5]', doc: 'Historia clínica', text: '“Antecedentes: hipertensión arterial. Apendicectomía (2015).”' },
+  ];
+  qa = [
+    { q: 'Where does this come from?', a: 'Fasting glucose 98 mg/dL comes from source [1], lab report, dated 12/03/2026 as written. The day and month order is unclear.' },
+    { q: 'What is missing or unclear?', a: 'The visit date 03/06/25 [4] and the lab date 12/03/2026 [1][2] have an unclear day and month order. Allergies come from the patient, not from the records.' },
+    { q: 'When was this measured?', a: 'Fasting glucose [1] and total cholesterol [2] are dated 12/03/2026 as written. The day and month order is unclear.' },
+  ];
+
+  qrCells() {
+    if (this._qr) return this._qr;
+    const N = 21, out = [];
+    const finder = (r, c) => {
+      for (const [R, C] of [[0, 0], [0, 14], [14, 0]]) {
+        const rr = r - R, cc = c - C;
+        if (rr >= -1 && rr <= 7 && cc >= -1 && cc <= 7) {
+          if (rr < 0 || rr > 6 || cc < 0 || cc > 6) return 0;
+          return (rr === 0 || rr === 6 || cc === 0 || cc === 6 || (rr >= 2 && rr <= 4 && cc >= 2 && cc <= 4)) ? 1 : 0;
+        }
+      }
+      return -1;
+    };
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+      let f = finder(r, c);
+      if (f === -1) f = ((r * 7 + c * 13 + r * c * 3 + (r ^ c)) % 5) < 2 ? 1 : 0;
+      out.push({ bg: f ? '#001f4b' : 'transparent' });
+    }
+    return (this._qr = out);
+  }
+
+  go(h) { const el = document.getElementById(h); if (el) { location.hash = h; } }
+
+  send = () => {
+    const t = this.state.draft.trim();
+    if (!t) return;
+    this.setState(s => ({ sent: [...s.sent, { text: t }], draft: '' }));
+  };
+
+  speak = () => {
+    const ss = window.speechSynthesis;
+    if (!ss) return;
+    if (this.state.speaking) { ss.cancel(); this.setState({ speaking: false }); return; }
+    const u = new SpeechSynthesisUtterance(this.qa[this.state.q].a);
+    u.lang = 'en-US';
+    u.onend = () => this.setState({ speaking: false });
+    this.setState({ speaking: true });
+    ss.speak(u);
+  };
+
+  componentWillUnmount() { window.speechSynthesis && window.speechSynthesis.cancel(); }
+
+  renderVals() {
+    const s = this.state;
+    const requireAck = this.props.requireAck ?? true;
+    const docSize = (this.props.doctorTextSize ?? 20) + 'px';
+    const en = s.lang === 'en';
+    return {
+      L: this.i18n[s.lang],
+      setEn: () => this.setState({ lang: 'en' }), setEs: () => this.setState({ lang: 'es' }),
+      enBg: en ? '#fff' : 'transparent', enFg: en ? 'var(--navy-900)' : 'inherit', enSh: en ? 'var(--shadow-xs)' : 'none',
+      esBg: en ? 'transparent' : '#fff', esFg: en ? 'inherit' : 'var(--navy-900)', esSh: en ? 'none' : 'var(--shadow-xs)',
+      c1: s.c1,
+      c1Pending: !s.c1 && !s.note1Open,
+      confirm1: () => this.setState({ c1: true }),
+      toggleNote1: () => this.setState({ note1Open: true }),
+      note1Open: s.note1Open,
+      noteDraft: s.noteDraft,
+      onNoteDraft: e => this.setState({ noteDraft: e.target.value }),
+      saveNote1: () => this.setState(st => ({ note1Open: false, notes1: st.noteDraft.trim() ? [...st.notes1, { text: st.noteDraft.trim() }] : st.notes1, noteDraft: '' })),
+      notes1: s.notes1,
+
+      src4: s.src4,
+      src4Label: s.src4 ? 'Ocultar fuente' : 'Ver fuente',
+      src4Rot: s.src4 ? 'rotate(180deg)' : 'none',
+      toggleSrc4: () => this.setState(st => ({ src4: !st.src4 })),
+      draft: s.draft,
+      onDraft: e => this.setState({ draft: e.target.value }),
+      onDraftKey: e => { if (e.key === 'Enter') this.send(); },
+      send: this.send,
+      sent: s.sent,
+
+      toggleAck: () => this.setState(st => ({ ack: !st.ack })),
+      ackBg: s.ack ? 'var(--blue-500)' : '#fff',
+      ackBorder: s.ack ? 'var(--blue-500)' : 'var(--grey-400)',
+      ackOpacity: s.ack ? 1 : 0,
+      ctaDisabled: requireAck ? !s.ack : false,
+      createSummary: () => this.go('2a'),
+
+      rowsA: this.rows.map((r, i) => {
+        const o = !!s.open[r.id];
+        return {
+          ...r, open: o,
+          border: i ? '1px solid var(--grey-100)' : 'none',
+          labelColor: r.pr ? 'var(--blue-700)' : 'var(--grey-500)',
+          ws: o ? 'normal' : 'nowrap',
+          cta: o ? 'Show less' : 'Show more',
+          rot: o ? 'rotate(90deg)' : 'none',
+          toggle: () => this.setState(st => ({ open: { ...st.open, [r.id]: !st.open[r.id] } })),
+        };
+      }),
+      exported: s.exported,
+      doExport: () => { this.setState({ exported: true }); clearTimeout(this._t); this._t = setTimeout(() => this.setState({ exported: false }), 2600); },
+      goDoctor: () => this.go('2c'),
+
+      rowsB: this.rows.slice(2),
+      appendix: s.appendix,
+      appendixRot: s.appendix ? 'rotate(90deg)' : 'none',
+      toggleAppendix: () => this.setState(st => ({ appendix: !st.appendix })),
+      sources: this.sources,
+
+      qr: this.qrCells(),
+      docSize,
+      rowsDoc: [
+        { label: 'Current medications', value: 'Losartan 50 mg, once daily', src: '[3]' },
+        { label: 'Recent labs', value: 'Fasting glucose 98 mg/dL, total cholesterol 210 mg/dL, date 12/03/2026 (ambiguous)', src: '[1][2]' },
+        { label: 'Past conditions and procedures', value: 'Hypertension; appendectomy, 2015', src: '[5]' },
+        { label: 'Allergies', value: 'Shellfish (mariscos), almonds (almendras)', src: '' },
+        { label: 'Missing or unclear', value: 'Visit date 03/06/25 is ambiguous', src: '[4]' },
+      ],
+      questions: this.qa.map((x, i) => ({
+        q: x.q,
+        bg: i === s.q ? 'var(--navy-900)' : '#fff',
+        fg: i === s.q ? '#fff' : 'var(--navy-900)',
+        bd: i === s.q ? 'var(--navy-900)' : 'var(--blue-100)',
+        pick: () => { window.speechSynthesis && window.speechSynthesis.cancel(); this.setState({ q: i, speaking: false }); },
+      })),
+      answer: this.qa[s.q].a,
+      speak: this.speak,
+      goDash: () => this.go('3c'),
+      goReview: () => this.go('1b'),
+      isQr: s.share === 'qr', isEmail: s.share === 'email',
+      shareQr: () => this.setState({ share: 'qr' }),
+      shareEmail: () => this.setState({ share: 'email' }),
+      qrTabBg: s.share === 'qr' ? '#fff' : 'transparent', qrTabSh: s.share === 'qr' ? 'var(--shadow-sm)' : 'none',
+      emTabBg: s.share === 'email' ? '#fff' : 'transparent', emTabSh: s.share === 'email' ? 'var(--shadow-sm)' : 'none',
+      emailTo: s.emailTo,
+      onEmailTo: e => this.setState({ emailTo: e.target.value }),
+      sendDisabled: !/\S+@\S+\.\S+/.test(s.emailTo),
+      sendEmail: () => { this.setState({ emailSent: true }); clearTimeout(this._t2); this._t2 = setTimeout(() => this.setState({ emailSent: false }), 2600); },
+      emailSent: s.emailSent,
+      confetti: this.confettiEl(),
+      celebrate: () => this.setState(st => ({ burst: st.burst + 1 })),
+      speakBg: s.speaking ? 'var(--blue-500)' : 'var(--blue-50)',
+      speakFg: s.speaking ? '#fff' : 'var(--blue-700)',
+    };
+  }
+}
+</script>
+</body>
+</html>

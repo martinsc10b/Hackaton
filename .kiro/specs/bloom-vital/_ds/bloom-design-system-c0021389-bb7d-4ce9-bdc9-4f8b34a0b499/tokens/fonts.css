@@ -1,0 +1,11 @@
+/* ============================================================
+   Bloom · Webfonts
+   Switzer  — Fontshare CDN (free, Indian Type Foundry).
+   Caveat   — Google Fonts, SUBSTITUTE for "Caption Handwriting"
+              (paid, no free webfont). Flagged in readme.
+   IBM Plex Mono — Google Fonts, monospace for codes/IDs.
+   To self-host: replace these @imports with local @font-face
+   pointing at woff2 files in assets/fonts/.
+   ============================================================ */
+@import url("https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");

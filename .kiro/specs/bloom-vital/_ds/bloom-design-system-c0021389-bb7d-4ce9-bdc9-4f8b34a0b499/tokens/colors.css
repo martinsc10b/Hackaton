@@ -1,0 +1,115 @@
+/* ============================================================
+   Bloom · Color tokens
+   Source of truth: Manual de marca Bloom (Set. 2025).
+   Manual palette (exact):
+     #16AAD3  Primario  · Pantone 638 C  · R22 G170 B211
+     #001f4b  Navy      · Pantone 655 C  · R0 G31 B75
+     #e0e657  Lima      · Pantone 387 C  · R224 G230 B87
+     #e9f4f8  Celeste   · Pantone 2975 C 25% · R233 G244 B248
+   Scales/neutrals/status are harmonious derivations for UI use
+   (see readme "Intentional additions").
+   ============================================================ */
+:root {
+  /* ---- Primary · cyan (brand core) ---- */
+  --blue-50:  #e9f4f8;   /* manual "celeste" tint */
+  --blue-100: #d2ebf4;
+  --blue-200: #a9dcec;
+  --blue-300: #74c8e1;
+  --blue-400: #3fb5d8;
+  --blue-500: #16aad3;   /* manual primary */
+  --blue-600: #1289ab;
+  --blue-700: #0f6b86;
+  --blue-800: #0d5268;
+  --blue-900: #0a3c4d;
+
+  /* ---- Navy · deep brand ink ---- */
+  --navy-50:  #eaeef5;
+  --navy-100: #cdd6e6;
+  --navy-200: #9aabc9;
+  --navy-300: #5f77a3;
+  --navy-400: #2f4a7a;
+  --navy-500: #123162;
+  --navy-600: #0a285a;
+  --navy-700: #06214f;
+  --navy-800: #021f4b;   /* near manual navy */
+  --navy-900: #001f4b;   /* manual navy */
+
+  /* ---- Accent · lima (use with moderation) ---- */
+  --lima-50:  #fbfce4;
+  --lima-100: #f5f7bb;
+  --lima-200: #edf18d;
+  --lima-300: #e0e657;   /* manual lima */
+  --lima-400: #cdd43e;
+  --lima-500: #b0b62f;
+  --lima-600: #8b9024;
+
+  /* ---- Neutrals · cool grey ---- */
+  --grey-0:   #ffffff;
+  --grey-50:  #f6f8fb;
+  --grey-100: #eef1f6;
+  --grey-200: #e0e5ee;
+  --grey-300: #c7cfdd;
+  --grey-400: #9aa4b8;
+  --grey-500: #6b7488;
+  --grey-600: #4c5568;
+  --grey-700: #343d50;
+  --grey-800: #202634;
+  --grey-900: #12151d;
+
+  /* ---- Status (derived; see readme) ---- */
+  --green-500:  #1f9d6b;
+  --green-50:   #e6f5ee;
+  --amber-500:  #e0a828;
+  --amber-50:   #fbf2dc;
+  --red-500:    #dc4c48;
+  --red-50:     #fbe9e8;
+  --info-500:   var(--blue-500);
+  --info-50:    var(--blue-50);
+
+  /* ============ Semantic aliases ============ */
+  /* Brand */
+  --color-primary:        var(--blue-500);
+  --color-primary-hover:  var(--blue-600);
+  --color-primary-active: var(--blue-700);
+  --color-primary-soft:   var(--blue-50);
+  --color-ink:            var(--navy-900);
+  --color-accent:         var(--lima-300);
+  --color-accent-strong:  var(--lima-400);
+
+  /* Text */
+  --text-strong:  var(--navy-900);
+  --text-body:    #1d2740;
+  --text-muted:   var(--grey-500);
+  --text-subtle:  var(--grey-400);
+  --text-on-primary: #ffffff;
+  --text-on-accent:  var(--navy-900);
+  --text-link:    var(--blue-600);
+  --text-link-hover: var(--blue-700);
+
+  /* Surfaces */
+  --surface-page:    var(--grey-50);
+  --surface-card:    #ffffff;
+  --surface-subtle:  var(--blue-50);
+  --surface-sunken:  var(--grey-100);
+  --surface-inverse: var(--navy-900);
+
+  /* Borders */
+  --border-subtle: var(--grey-200);
+  --border-default: var(--grey-300);
+  --border-strong:  var(--grey-400);
+  --border-focus:   var(--blue-500);
+
+  /* Status semantic */
+  --color-success: var(--green-500);
+  --color-success-soft: var(--green-50);
+  --color-warning: var(--amber-500);
+  --color-warning-soft: var(--amber-50);
+  --color-danger:  var(--red-500);
+  --color-danger-soft: var(--red-50);
+  --color-info:    var(--info-500);
+  --color-info-soft: var(--info-50);
+
+  /* Brand gradient (from microilustraciones: cyan → celeste) */
+  --gradient-bloom: linear-gradient(160deg, var(--blue-500) 0%, var(--blue-200) 100%);
+  --gradient-soft:  linear-gradient(160deg, var(--blue-100) 0%, #ffffff 100%);
+}
