@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bloom Vital — Mockup (Demo Only)</title>
+<!--
+  Bloom Vital — review-only visual mockup.
+  Self-contained, offline. No external assets, no network, no build step.
+  All data is FICTIONAL and hard-coded in-memory. No uploads, no OCR, no real data.
+  All controls are simulated. This mockup performs NO clinical reasoning,
+  NO unit conversion, and NO lab comparison. It makes NO CMS/FHIR claims.
+-->
+<style>
+  :root {
+    --ink: #1f2a33;
+    --muted: #5c6b76;
+    --line: #d9e1e7;
+    --bg: #f4f7f9;
+    --panel: #ffffff;
+    --accent: #2f6f8f;
+    --accent-soft: #e7f0f5;
+    --flag-amb: #8a5a00;
+    --flag-amb-bg: #fdf3e2;
+    --flag-nd: #5a4b8a;
+    --flag-nd-bg: #efecf8;
+    --flag-unk: #7a4a52;
+    --flag-unk-bg: #f8ecee;
+    --flag-conf: #9a3b2f;
+    --flag-conf-bg: #fbe9e6;
+    --ok: #2e6b4f;
+    --note: #2f5f8f;
+    --note-bg: #eaf1f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.5;
+    font-size: 14px;
+  }
+  header.app {
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 22px;
+  }
+  header.app h1 { margin: 0; font-size: 18px; letter-spacing: 0.2px; }
+  header.app p { margin: 4px 0 0; color: var(--muted); font-size: 12.5px; }
+  .demo-banner {
+    background: #fff8e1;
+    border: 1px solid #ecd9a0;
+    color: #6b5500;
+    padding: 8px 14px;
+    font-size: 12.5px;
+    text-align: center;
+  }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 18px 22px 60px; }
+
+  /* Case selector */
+  .cases { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+  .case-btn {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    text-align: left;
+    min-width: 210px;
+    font: inherit;
+    color: inherit;
+  }
+  .case-btn:hover { border-color: var(--accent); }
+  .case-btn.active { border-color: var(--accent); background: var(--accent-soft); }
+  .case-btn .nm { font-weight: 600; }
+  .case-btn .sub { color: var(--muted); font-size: 12px; }
+
+  /* Two-pane review */
+  .panes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .panel h2 {
+    font-size: 13px; text-transform: uppercase; letter-spacing: 0.6px;
+    color: var(--muted); margin: 0 0 12px; font-weight: 700;
+  }
+  .section-title {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--accent); margin: 16px 0 6px; font-weight: 700;
+  }
+  .section-title:first-of-type { margin-top: 0; }
+
+  .fact { border-top: 1px solid var(--line); padding: 9px 0; }
+  .fact:first-child { border-top: none; }
+  .fact .label { color: var(--muted); font-size: 12px; }
+  .fact .value { font-weight: 600; }
+  .fact .en { font-size: 12.5px; color: var(--muted); }
+
+  .flag {
+    display: inline-block; font-size: 10.5px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.4px;
+    padding: 1px 7px; border-radius: 999px; margin-left: 6px; vertical-align: middle;
+    border: 1px solid transparent;
+  }
+  .flag.amb { color: var(--flag-amb); background: var(--flag-amb-bg); border-color: #ecd9a0; }
+  .flag.nd  { color: var(--flag-nd);  background: var(--flag-nd-bg);  border-color: #d4ccec; }
+  .flag.unk { color: var(--flag-unk); background: var(--flag-unk-bg); border-color: #e6c8cd; }
+  .flag.conf{ color: var(--flag-conf);background: var(--flag-conf-bg);border-color: #efc4bc; }
+  .flag.ackd { color: var(--ok); background: #e7f3ec; border-color: #bfe0cc; }
+
+  .cite {
+    font: inherit; font-size: 11px; color: var(--accent);
+    background: none; border: none; cursor: pointer; padding: 0 2px;
+    text-decoration: underline; vertical-align: super;
+  }
+  .cite:hover { color: #1d4d63; }
+
+  .correction {
+    margin-top: 6px; font-size: 12px;
+    background: var(--note-bg); border: 1px dashed #b9d0e6;
+    border-radius: 6px; padding: 6px 9px; color: var(--note);
+  }
+  .correction b { color: var(--note); }
+
+  /* Evidence (Spanish source) list */
+  .evidence-item {
+    border-top: 1px solid var(--line); padding: 10px 0;
+  }
+  .evidence-item:first-child { border-top: none; }
+  .evidence-item.hl { background: #fff8e8; border-radius: 6px; padding: 10px; }
+  .evidence-item .loc { font-size: 11px; color: var(--muted); }
+  .evidence-item .es { font-style: italic; }
+  .evidence-item .num {
+    display: inline-block; min-width: 20px; height: 20px; line-height: 20px;
+    text-align: center; border-radius: 50%; background: var(--accent-soft);
+    color: var(--accent); font-size: 11px; font-weight: 700; margin-right: 6px;
+  }
+
+  /* Review gate / acknowledgment */
+  .gate {
+    margin-top: 18px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 16px 18px;
+  }
+  .gate h2 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase;
+    letter-spacing: 0.6px; color: var(--muted); }
+  .checklist { list-style: none; margin: 0 0 12px; padding: 0; }
+  .checklist li { padding: 6px 0; border-top: 1px solid var(--line); font-size: 13px; }
+  .checklist li:first-child { border-top: none; }
+  .checklist input { margin-right: 8px; transform: translateY(1px); }
+  .gate-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .print-btn {
+    font: inherit; font-weight: 600; color: #fff; background: var(--accent);
+    border: none; border-radius: 8px; padding: 10px 18px; cursor: pointer;
+  }
+  .print-btn:disabled { background: #9fb4bf; cursor: not-allowed; }
+  .gate-status { font-size: 12.5px; color: var(--muted); }
+  .gate-status.ready { color: var(--ok); font-weight: 600; }
+
+  .hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+
+  /* ---------- PRINT: brief page then source appendix ---------- */
+  .print-only { display: none; }
+  @media print {
+    body { background: #fff; font-size: 11.5px; }
+    header.app, .demo-banner, .cases, .panes, .gate, .screen-only { display: none !important; }
+    .wrap { max-width: none; margin: 0; padding: 0; }
+    .print-only { display: block; }
+    .brief-page { padding: 14mm; }
+    .appendix-page { padding: 14mm; page-break-before: always; }
+    .print-head h1 { font-size: 17px; margin: 0; }
+    .print-head .meta { color: #555; font-size: 10.5px; margin: 2px 0 10px; }
+    .print-demo {
+      border: 1px solid #ccc; padding: 5px 8px; font-size: 10px; color: #555;
+      margin-bottom: 10px;
+    }
+    .p-section-title {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+      border-bottom: 1px solid #000; padding-bottom: 2px; margin: 12px 0 5px; font-weight: 700;
+    }
+    .p-row { margin: 3px 0; }
+    .p-flag { font-weight: 700; text-transform: uppercase; font-size: 9.5px; }
+    .p-cite { vertical-align: super; font-size: 9px; }
+    .p-correction { font-style: italic; color: #333; }
+    .p-evidence { margin: 5px 0; }
+    .p-evidence .es { font-style: italic; }
+    .p-evidence .loc { color: #555; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+<header class="app">
+  <h1>Bloom Vital</h1>
+  <p>Patient-prepared, source-linked English brief from fictional Spanish records · review-only mockup</p>
+</header>
+<div class="demo-banner">
+  DEMO ONLY — all data is FICTIONAL and synthetic. No real patient data. No clinical reasoning, no unit conversion, no lab comparison. No CMS affiliation/endorsement or FHIR compliance. CMS ACCESS layout used as reference only.
+</div>
+
+<div class="wrap">
+  <!-- (1) Case selection -->
+  <div class="screen-only">
+    <div class="section-title">Select a bundled fictional case (3)</div>
+    <div class="cases" id="caseButtons"></div>
+  </div>
+
+  <!-- (2) English brief/review beside exact Spanish evidence -->
+  <div class="panes screen-only">
+    <section class="panel">
+      <h2>English brief · review</h2>
+      <div id="briefPane"></div>
+    </section>
+    <section class="panel">
+      <h2>Exact Spanish source evidence</h2>
+      <div id="evidencePane"></div>
+      <p class="hint">Numbered citations in the brief link here. In print, this becomes a separate source appendix.</p>
+    </section>
+  </div>
+
+  <!-- (3) Review gate -->
+  <div class="gate screen-only">
+    <h2>Review gate</h2>
+    <ul class="checklist" id="gateChecklist"></ul>
+    <div class="gate-actions">
+      <button class="print-btn" id="printBtn" disabled onclick="window.print()">Print brief</button>
+      <span class="gate-status" id="gateStatus"></span>
+    </div>
+    <p class="hint">Acknowledgment permits export only — it is not clinical verification. Acknowledged items stay visibly flagged in the brief.</p>
+  </div>
+
+  <!-- PRINT OUTPUT: compact brief page + source appendix -->
+  <div class="print-only" id="printOutput"></div>
+</div>
+
+<script>
+/* ---------------------------------------------------------------------------
+   In-memory simulated data. FICTIONAL. Three bundled cases.
+   Flags: amb (ambiguous), nd (not documented), unk (unknown status), conf (conflict).
+   Nothing here is converted, compared, or clinically interpreted.
+--------------------------------------------------------------------------- */
+const CASES = [
+  {
+    id: "rosa",
+    name: "Rosa M. (fictional)",
+    sub: "Centro de Salud demo record",
+    basics: { name: "Rosa M.", dob: "1961-07-14", sex: "F", id: "DEMO-001" },
+    // Each fact may carry a flag and a citation index into `evidence`.
+    sections: {
+      "Medications": [
+        { es: "Metformina 850 mg, 1 comprimido dos veces al día",
+          en: "Metformin 850 mg, 1 tablet twice daily", cite: 1,
+          status: { flag: "unk", text: "current/taking status UNKNOWN — last mention is from an older note" } },
+        { es: "Enalapril (dosis no indicada)",
+          en: "Enalapril (dose not stated)", cite: 2,
+          detail: { flag: "nd", text: "dose NOT DOCUMENTED" },
+          status: { flag: "unk", text: "current/taking status UNKNOWN" } }
+      ],
+      "Labs": [
+        { es: "Glucosa en ayunas: 126 mg/dL — fecha 03/12/2025",
+          en: "Fasting glucose: 126 mg/dL — date 03/12/2025", cite: 3,
+          dateFlag: { flag: "amb", text: "ambiguous date 03/12/2025 — month/day order NOT resolved" } },
+        { es: "Glucosa en ayunas: 7.1 mmol/L — fecha: tres de diciembre de 2024",
+          en: "Fasting glucose: 7.1 mmol/L — date: December 3, 2024", cite: 4 }
+        // NOTE: two glucose results, different times, different original units.
+        // Preserved as-is. NOT converted, NOT compared, NOT flagged as conflict.
+      ],
+      "Conditions": [
+        { es: "Diabetes mellitus tipo 2", en: "Type 2 diabetes mellitus", cite: 1 }
+      ],
+      "Procedures": [
+        { es: "Ninguno documentado", en: "None documented", cite: null,
+          detail: { flag: "nd", text: "NOT DOCUMENTED" } }
+      ],
+      "Allergies": [
+        { es: "(campo en blanco)", en: "(field blank)", cite: 2,
+          detail: { flag: "nd", text: "NOT DOCUMENTED — blank field, not 'no known allergies'" } }
+      ]
+    },
+    corrections: [
+      { on: "Metformin 850 mg", text: "Patient note: I stopped this about a year ago." }
+    ],
+    evidence: [
+      { n: 1, loc: "Nota clínica, pág. 1, §Diagnósticos", es: "Diabetes mellitus tipo 2. Metformina 850 mg c/12h." },
+      { n: 2, loc: "Receta, pág. 1", es: "Enalapril — tomar según indicación. Alergias: ____________" },
+      { n: 3, loc: "Laboratorio, informe A, pág. 2", es: "Glucosa en ayunas 126 mg/dL (03/12/2025)." },
+      { n: 4, loc: "Laboratorio, informe B, pág. 1", es: "Glucosa en ayunas 7.1 mmol/L, tres de diciembre de 2024." }
+    ],
+    flagsToAck: [
+      "Ambiguous date 03/12/2025 (fasting glucose)",
+      "Metformin — current/taking status UNKNOWN",
+      "Enalapril — dose NOT DOCUMENTED and status UNKNOWN",
+      "Allergies — NOT DOCUMENTED (blank field)"
+    ]
+  },
+  {
+    id: "carlos",
+    name: "Carlos V. (fictional)",
+    sub: "Hospital demo discharge",
+    basics: { name: "Carlos V.", dob: "1948-11-02", sex: "M", id: "DEMO-002" },
+    sections: {
+      "Medications": [
+        { es: "Atorvastatina 20 mg por la noche", en: "Atorvastatin 20 mg at night", cite: 1,
+          status: { flag: "unk", text: "current/taking status UNKNOWN" } }
+      ],
+      "Labs": [
+        { es: "Colesterol total: 210 mg/dL — fecha 10/06/2023",
+          en: "Total cholesterol: 210 mg/dL — date 10/06/2023", cite: 2,
+          dateFlag: { flag: "amb", text: "ambiguous date 10/06/2023 — month/day order NOT resolved" } }
+      ],
+      "Conditions": [
+        { es: "Hipertensión arterial", en: "Hypertension", cite: 1 }
+      ],
+      "Procedures": [
+        { es: "Colonoscopia (fecha no indicada)", en: "Colonoscopy (date not stated)", cite: 3,
+          detail: { flag: "nd", text: "date NOT DOCUMENTED" } }
+      ],
+      "Allergies": [
+        // CONFLICT: two documents, matching context, genuinely contradictory claims.
+        { es: "Alergia a la penicilina", en: "Allergy to penicillin", cite: 4,
+          detail: { flag: "conf", text: "CONFLICT with discharge note — kept attributed, not merged" } },
+        { es: "Sin alergia a la penicilina", en: "No allergy to penicillin", cite: 5,
+          detail: { flag: "conf", text: "CONFLICT with intake form — kept attributed, not merged" } }
+      ]
+    },
+    corrections: [],
+    evidence: [
+      { n: 1, loc: "Resumen de alta, pág. 1", es: "HTA en tratamiento. Atorvastatina 20 mg noche." },
+      { n: 2, loc: "Laboratorio, pág. 1", es: "Colesterol total 210 mg/dL (10/06/2023)." },
+      { n: 3, loc: "Antecedentes, pág. 2", es: "Colonoscopia previa, sin fecha registrada." },
+      { n: 4, loc: "Formulario de ingreso, pág. 1", es: "Alergias: penicilina." },
+      { n: 5, loc: "Resumen de alta, pág. 2", es: "Sin alergias conocidas a la penicilina." }
+    ],
+    flagsToAck: [
+      "Ambiguous date 10/06/2023 (total cholesterol)",
+      "Atorvastatin — current/taking status UNKNOWN",
+      "Colonoscopy — date NOT DOCUMENTED",
+      "Allergy to penicillin — CONFLICT across documents"
+    ]
+  },
+  {
+    id: "lucia",
+    name: "Lucía F. (fictional)",
+    sub: "Clínica demo note",
+    basics: { name: "Lucía F.", dob: "1990-03-21", sex: "F", id: "DEMO-003" },
+    sections: {
+      "Medications": [
+        { es: "Levotiroxina 50 mcg en ayunas", en: "Levothyroxine 50 mcg fasting", cite: 1,
+          status: { flag: "unk", text: "current/taking status UNKNOWN" } }
+      ],
+      "Labs": [
+        { es: "TSH: 3.2 mUI/L — fecha 03/12/2025",
+          en: "TSH: 3.2 mIU/L — date 03/12/2025", cite: 2,
+          dateFlag: { flag: "amb", text: "ambiguous date 03/12/2025 — month/day order NOT resolved" } },
+        { es: "TSH: 4.8 µUI/mL — fecha: tres de diciembre de 2024",
+          en: "TSH: 4.8 µIU/mL — date: December 3, 2024", cite: 3 }
+        // Two TSH results, different times, different original units. Preserved. No conversion, no comparison.
+      ],
+      "Conditions": [
+        { es: "Hipotiroidismo", en: "Hypothyroidism", cite: 1 }
+      ],
+      "Procedures": [
+        { es: "Ninguno documentado", en: "None documented", cite: null,
+          detail: { flag: "nd", text: "NOT DOCUMENTED" } }
+      ],
+      "Allergies": [
+        { es: "(campo en blanco)", en: "(field blank)", cite: 1,
+          detail: { flag: "nd", text: "NOT DOCUMENTED — blank field, not 'no known allergies'" } }
+      ]
+    },
+    corrections: [
+      { on: "Levothyroxine 50 mcg", text: "Patient note: Still taking this every morning." }
+    ],
+    evidence: [
+      { n: 1, loc: "Nota de clínica, pág. 1", es: "Hipotiroidismo. Levotiroxina 50 mcg en ayunas. Alergias: ____" },
+      { n: 2, loc: "Laboratorio, informe A, pág. 1", es: "TSH 3.2 mUI/L (03/12/2025)." },
+      { n: 3, loc: "Laboratorio, informe B, pág. 1", es: "TSH 4.8 µUI/mL, tres de diciembre de 2024." }
+    ],
+    flagsToAck: [
+      "Ambiguous date 03/12/2025 (TSH)",
+      "Levothyroxine — current/taking status UNKNOWN",
+      "Allergies — NOT DOCUMENTED (blank field)"
+    ]
+  }
+];
+
+const FLAG_LABEL = {
+  amb:  { cls: "amb",  text: "AMBIGUOUS" },
+  nd:   { cls: "nd",   text: "NOT DOCUMENTED" },
+  unk:  { cls: "unk",  text: "UNKNOWN STATUS" },
+  conf: { cls: "conf", text: "CONFLICT" }
+};
+
+let activeCase = CASES[0];
+let acked = {};   // index -> bool
+let reviewed = false;
+
+function flagSpan(flag, titleText) {
+  const f = FLAG_LABEL[flag];
+  if (!f) return "";
+  return `<span class="flag ${f.cls}" title="${escapeHtml(titleText || '')}">${f.text}</span>`;
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => (
+    { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]
+  ));
+}
+
+/* ---- (1) render case buttons ---- */
+function renderCases() {
+  const host = document.getElementById("caseButtons");
+  host.innerHTML = "";
+  CASES.forEach(c => {
+    const b = document.createElement("button");
+    b.className = "case-btn" + (c.id === activeCase.id ? " active" : "");
+    b.innerHTML = `<div class="nm">${escapeHtml(c.name)}</div><div class="sub">${escapeHtml(c.sub)}</div>`;
+    b.onclick = () => { activeCase = c; resetReview(); renderAll(); };
+    host.appendChild(b);
+  });
+}
+
+/* ---- (2) render brief + evidence ---- */
+function renderBrief() {
+  const c = activeCase;
+  let html = "";
+  const b = c.basics;
+  html += `<div class="section-title">Patient basics</div>`;
+  html += `<div class="fact"><span class="value">${escapeHtml(b.name)}</span>
+           <span class="en">DOB ${escapeHtml(b.dob)} · ${escapeHtml(b.sex)} · ${escapeHtml(b.id)}</span></div>`;
+
+  for (const [sec, facts] of Object.entries(c.sections)) {
+    html += `<div class="section-title">${escapeHtml(sec)}</div>`;
+    facts.forEach(f => {
+      let flags = "";
+      if (f.detail)   flags += flagSpan(f.detail.flag, f.detail.text);
+      if (f.status)   flags += flagSpan(f.status.flag, f.status.text);
+      if (f.dateFlag) flags += flagSpan(f.dateFlag.flag, f.dateFlag.text);
+      const cite = f.cite ? `<button class="cite" onclick="highlightEvidence(${f.cite})">[${f.cite}]</button>` : "";
+      html += `<div class="fact">
+          <div class="value">${escapeHtml(f.en)} ${cite}${flags}</div>
+          <div class="en">ES: ${escapeHtml(f.es)}</div>
+        </div>`;
+    });
+  }
+
+  // Patient corrections shown separately from source facts
+  html += `<div class="section-title">Patient corrections (separate from source)</div>`;
+  if (c.corrections.length === 0) {
+    html += `<div class="fact"><span class="en">No patient corrections entered.</span></div>`;
+  } else {
+    c.corrections.forEach(cor => {
+      html += `<div class="correction"><b>On "${escapeHtml(cor.on)}":</b> ${escapeHtml(cor.text)}
+               <br><span style="font-size:11px">Source fact and evidence preserved unchanged.</span></div>`;
+    });
+  }
+  document.getElementById("briefPane").innerHTML = html;
+}
+
+function renderEvidence() {
+  const c = activeCase;
+  let html = "";
+  c.evidence.forEach(ev => {
+    html += `<div class="evidence-item" id="ev-${ev.n}">
+        <div class="loc"><span class="num">${ev.n}</span>${escapeHtml(ev.loc)}</div>
+        <div class="es">“${escapeHtml(ev.es)}”</div>
+      </div>`;
+  });
+  document.getElementById("evidencePane").innerHTML = html;
+}
+
+function highlightEvidence(n) {
+  document.querySelectorAll(".evidence-item").forEach(e => e.classList.remove("hl"));
+  const el = document.getElementById("ev-" + n);
+  if (el) { el.classList.add("hl"); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
+}
+
+/* ---- (3) review gate ---- */
+function renderGate() {
+  const c = activeCase;
+  const host = document.getElementById("gateChecklist");
+  host.innerHTML = "";
+
+  // "reviewed everything" checkbox
+  const liRev = document.createElement("li");
+  liRev.innerHTML = `<label><input type="checkbox" id="revAll"> I have reviewed every extracted fact against its Spanish source.</label>`;
+  host.appendChild(liRev);
+  liRev.querySelector("input").checked = reviewed;
+  liRev.querySelector("input").onchange = e => { reviewed = e.target.checked; updateGate(); };
+
+  // one acknowledgment per unresolved flag
+  c.flagsToAck.forEach((label, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<label><input type="checkbox" data-ack="${i}"> Acknowledge (not verify): ${escapeHtml(label)}</label>`;
+    host.appendChild(li);
+    const cb = li.querySelector("input");
+    cb.checked = !!acked[i];
+    cb.onchange = e => { acked[i] = e.target.checked; updateGate(); };
+  });
+  updateGate();
+}
+
+function allAcked() {
+  return activeCase.flagsToAck.every((_, i) => acked[i]);
+}
+function updateGate() {
+  const ready = reviewed && allAcked();
+  const btn = document.getElementById("printBtn");
+  const status = document.getElementById("gateStatus");
+  btn.disabled = !ready;
+  if (ready) {
+    status.textContent = "Review complete — print enabled. Acknowledged items remain flagged in the brief.";
+    status.className = "gate-status ready";
+  } else {
+    const remaining = activeCase.flagsToAck.filter((_, i) => !acked[i]).length + (reviewed ? 0 : 1);
+    status.textContent = `Print disabled — ${remaining} review/acknowledgment item(s) remaining.`;
+    status.className = "gate-status";
+  }
+  renderPrint(); // keep print output in sync (acknowledged flags shown)
+}
+
+function resetReview() { acked = {}; reviewed = false; }
+
+/* ---- print output: compact brief page + source appendix ---- */
+function renderPrint() {
+  const c = activeCase;
+  const b = c.basics;
+  const today = "generated " + new Date().toISOString().slice(0,10);
+  let brief = `<section class="brief-page">
+    <div class="print-head">
+      <h1>Bloom Vital — Patient-Prepared Brief</h1>
+      <div class="meta">${escapeHtml(b.name)} · DOB ${escapeHtml(b.dob)} · ${escapeHtml(b.sex)} · ${escapeHtml(b.id)} · ${escapeHtml(today)}</div>
+    </div>
+    <div class="print-demo">DEMO ONLY — fictional synthetic data. No clinical reasoning, no unit conversion, no lab comparison. No CMS/FHIR claims. CMS ACCESS layout referenced only.</div>`;
+
+  for (const [sec, facts] of Object.entries(c.sections)) {
+    brief += `<div class="p-section-title">${escapeHtml(sec)}</div>`;
+    facts.forEach(f => {
+      let flags = "";
+      [f.detail, f.status, f.dateFlag].forEach(fl => {
+        if (fl) flags += ` <span class="p-flag">[${FLAG_LABEL[fl.flag].text}]</span>`;
+      });
+      const cite = f.cite ? `<span class="p-cite">[${f.cite}]</span>` : "";
+      brief += `<div class="p-row">• ${escapeHtml(f.en)}${cite}${flags}<br>
+                <span style="color:#555">ES: ${escapeHtml(f.es)}</span></div>`;
+    });
+  }
+  brief += `<div class="p-section-title">Patient corrections (separate from source)</div>`;
+  if (c.corrections.length === 0) {
+    brief += `<div class="p-row p-correction">No patient corrections entered.</div>`;
+  } else {
+    c.corrections.forEach(cor => {
+      brief += `<div class="p-row p-correction">On "${escapeHtml(cor.on)}": ${escapeHtml(cor.text)} (source fact preserved)</div>`;
+    });
+  }
+  brief += `<div class="p-section-title">Unresolved items (acknowledged, still flagged)</div>`;
+  c.flagsToAck.forEach((label, i) => {
+    brief += `<div class="p-row">• ${escapeHtml(label)} — <span class="p-flag">${acked[i] ? "ACKNOWLEDGED (not verified)" : "NOT ACKNOWLEDGED"}</span></div>`;
+  });
+  brief += `</section>`;
+
+  // Appendix page
+  let appx = `<section class="appendix-page">
+    <div class="print-head"><h1>Source Appendix — Exact Spanish Evidence</h1>
+    <div class="meta">${escapeHtml(b.name)} · ${escapeHtml(b.id)}</div></div>`;
+  c.evidence.forEach(ev => {
+    appx += `<div class="p-evidence"><b>[${ev.n}]</b> <span class="loc">${escapeHtml(ev.loc)}</span><br>
+             <span class="es">“${escapeHtml(ev.es)}”</span></div>`;
+  });
+  appx += `</section>`;
+
+  document.getElementById("printOutput").innerHTML = brief + appx;
+}
+
+function renderAll() { renderCases(); renderBrief(); renderEvidence(); renderGate(); }
+renderAll();
+</script>
+</body>
+</html>
