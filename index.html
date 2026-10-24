@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bloom Vital — Demo (fictional patient)</title>
+<!--
+  Bloom Vital — single-file working demo. Fictional patient, no backend, no AI, no real data.
+  Visual reference: .kiro/specs/bloom-vital/Bloom Vital.dc.html (colors/fonts/spacing reused).
+  Screens built: 3a splash · 1a/1b/1c Chat (Spanish) · 2a/2b/2c History (English) · Show-to-doctor.
+  NOT built: 3b/3c dashboard, 3e family, email sharing (3d).
+-->
+<!-- QR library (external, from cdnjs per request). If offline, a fallback placeholder is shown. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+/* ===== Design tokens (copied from Bloom design system) ===== */
+:root{
+  --blue-50:#e9f4f8;--blue-100:#d2ebf4;--blue-200:#a9dcec;--blue-300:#74c8e1;--blue-400:#3fb5d8;
+  --blue-500:#16aad3;--blue-600:#1289ab;--blue-700:#0f6b86;--blue-800:#0d5268;--blue-900:#0a3c4d;
+  --navy-700:#06214f;--navy-800:#021f4b;--navy-900:#001f4b;
+  --lima-300:#e0e657;
+  --grey-0:#fff;--grey-50:#f6f8fb;--grey-100:#eef1f6;--grey-200:#e0e5ee;--grey-300:#c7cfdd;
+  --grey-400:#9aa4b8;--grey-500:#6b7488;--grey-600:#4c5568;--grey-700:#343d50;
+  --green-500:#1f9d6b;--green-50:#e6f5ee;
+  --amber-500:#e0a828;--amber-50:#fbf2dc;
+  --red-500:#dc4c48;--red-50:#fbe9e8;
+  --text-body:#1d2740;
+  --font-sans:"Switzer","Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-hand:"Caveat","Switzer",cursive;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",monospace;
+  --shadow-xs:0 1px 2px rgba(0,31,75,.06);--shadow-sm:0 2px 6px rgba(0,31,75,.07);
+  --shadow-md:0 6px 18px rgba(0,31,75,.09);--shadow-lg:0 14px 34px rgba(0,31,75,.12);
+  --shadow-xl:0 24px 60px rgba(0,31,75,.16);
+  --gradient-bloom:linear-gradient(160deg,var(--blue-500) 0%,var(--blue-200) 100%);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+}
+@import url("https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font-sans);color:var(--text-body);background:#eef1f6;
+  display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+button{font-family:inherit}
+input,textarea{font-family:inherit}
+
+/* phone frame */
+.phone{width:390px;max-width:100%;height:844px;max-height:calc(100vh - 40px);background:#fff;border-radius:44px;
+  overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);border:1px solid var(--grey-200);position:relative}
+.statusbar{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;
+  font:600 15px var(--font-sans);color:var(--navy-900)}
+.battery{width:24px;height:11px;border:1.5px solid var(--navy-900);border-radius:3px;padding:1px}
+.battery>span{display:block;width:70%;height:100%;background:var(--navy-900);border-radius:1px}
+.appbar{height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--grey-100)}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .logo{height:24px;width:auto}
+.brand .name{font:700 18px var(--font-sans);color:var(--navy-900);letter-spacing:-.01em}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;background:var(--grey-100);
+  color:var(--grey-600);font:600 11px var(--font-sans)}
+.badge.danger{background:var(--red-50);color:var(--red-500)}
+.badge.danger::before{content:"";width:6px;height:6px;border-radius:999px;background:var(--red-500)}
+.langtoggle{display:flex;padding:3px;border-radius:999px;background:var(--grey-100)}
+.langtoggle button{all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;font:700 12px/1 var(--font-sans);
+  letter-spacing:.02em;color:var(--grey-500);transition:background 120ms}
+.langtoggle button.active{background:#fff;color:var(--navy-900);box-shadow:var(--shadow-xs)}
+.body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px}
+.footer{flex:none;padding:8px 20px;text-align:center;font:500 12px var(--font-sans);color:var(--grey-600);
+  background:var(--grey-50);border-top:1px solid var(--grey-100)}
+.tabbar{flex:none;height:84px;display:flex;border-top:1px solid var(--grey-200);background:#fff;padding-bottom:20px}
+.tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  text-decoration:none;color:var(--grey-500);font:600 12px var(--font-sans);cursor:pointer}
+.tabbar a.active{color:var(--blue-500)}
+
+/* chat bubbles */
+.bubble-bot{background:var(--blue-50);color:var(--navy-900);padding:14px 16px;border-radius:20px 20px 20px 6px;
+  font:400 17px/1.45 var(--font-sans);align-self:flex-start;max-width:88%;text-wrap:pretty}
+.bubble-me{background:var(--navy-900);color:#fff;padding:14px 16px;border-radius:20px 20px 6px 20px;
+  font:400 17px/1.45 var(--font-sans);align-self:flex-end;max-width:85%;text-wrap:pretty}
+.small-label{font:600 12px var(--font-sans);color:var(--grey-500)}
+.daylabel{font:500 12px var(--font-sans);color:var(--grey-500);text-align:center}
+.filecard{display:flex;align-items:center;gap:12px;padding:10px 12px;background:#fff;border:1px solid var(--grey-200);
+  border-radius:14px;box-shadow:var(--shadow-sm);width:100%}
+.filecard .ext{width:40px;height:40px;flex:none;border-radius:10px;background:var(--blue-50);color:var(--blue-700);
+  display:flex;align-items:center;justify-content:center;font:700 11px var(--font-sans);letter-spacing:.04em}
+.filecard .fn{font:600 15px/1.3 var(--font-sans);color:var(--navy-900)}
+.filecard .fm{font:400 12px var(--font-sans);color:var(--grey-500)}
+
+/* composer */
+.composer{flex:none;display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid var(--grey-100)}
+.composer input{flex:1;min-width:0;height:48px;border:1px solid var(--grey-300);border-radius:999px;padding:0 18px;
+  font:400 17px var(--font-sans);color:var(--navy-900);outline:none;background:var(--grey-50)}
+.iconbtn{width:44px;height:44px;flex:none;border:1px solid var(--grey-300);border-radius:999px;background:#fff;
+  color:var(--navy-700);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.iconbtn:hover{background:var(--blue-50)}
+.sendbtn{width:48px;height:48px;flex:none;border:none;border-radius:999px;background:var(--blue-500);color:#fff;
+  display:flex;align-items:center;justify-content:center;cursor:pointer}
+.sendbtn:hover{background:var(--blue-600)}
+
+/* fact card */
+.factcard{background:#fff;border:1px solid var(--grey-200);border-radius:16px;box-shadow:var(--shadow-sm);
+  overflow:hidden;animation:rise 420ms var(--ease-out) both}
+.factcard .top{height:6px;background:var(--gradient-bloom)}
+.factcard .inner{padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.factcard .ftitle{font:600 12px var(--font-sans);color:var(--blue-700);letter-spacing:.04em;text-transform:uppercase}
+.factcard .fval{font:600 20px/1.3 var(--font-sans);color:var(--navy-900)}
+.factcard .srcline{background:var(--grey-50);border:1px solid var(--grey-100);border-radius:10px;padding:10px 12px;
+  display:flex;flex-direction:column;gap:4px}
+.factcard .srcline .srclbl{font:600 11px var(--font-mono);color:var(--blue-700)}
+.factcard .srcline .srctext{font:400 14px/1.4 var(--font-sans);color:var(--navy-900)}
+.tag-amber{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;padding:4px 10px;border-radius:999px;
+  background:var(--amber-50);color:#9a7310;font:600 12px var(--font-sans)}
+.cardbtns{display:flex;gap:10px}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;text-align:center;border-radius:12px;font:600 15px var(--font-sans);
+  padding:12px 16px;transition:background 120ms,opacity 120ms}
+.btn-primary{background:var(--blue-500);color:#fff}
+.btn-primary:hover{background:var(--blue-600)}
+.btn-primary[disabled]{background:var(--grey-300);cursor:not-allowed}
+.btn-secondary{background:var(--grey-100);color:var(--navy-900)}
+.btn-secondary:hover{background:var(--grey-200)}
+.btn-ghost{background:transparent;color:var(--blue-700);border:1px solid var(--grey-200)}
+.btn-ghost:hover{background:var(--blue-50)}
+.btn-full{display:block;width:100%}
+.patientnote{background:var(--blue-50);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:3px}
+.patientnote .pnlbl{font:600 11px var(--font-sans);color:var(--blue-700)}
+.patientnote .pntext{font:400 15px/1.4 var(--font-sans);color:var(--navy-900)}
+.noteinput{display:flex;flex-direction:column;gap:8px}
+.noteinput textarea{border:1px solid var(--grey-300);border-radius:12px;padding:10px 12px;font:400 16px var(--font-sans);
+  color:var(--navy-900);outline:none;resize:vertical;min-height:70px;background:var(--grey-50)}
+.confirmed{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;font:600 13px var(--font-sans);
+  color:var(--green-500);background:var(--green-50);padding:6px 12px;border-radius:999px}
+
+/* ack / gate (1c) */
+.ackcard{background:#fff;border:1px solid var(--grey-200);border-radius:16px;box-shadow:var(--shadow-md);overflow:hidden}
+.ackcard .top{height:6px;background:var(--gradient-bloom)}
+.ackrow{all:unset;cursor:pointer;display:flex;align-items:flex-start;gap:14px;padding:22px 20px}
+.checkbox{width:28px;height:28px;flex:none;border-radius:8px;border:2px solid var(--grey-400);background:#fff;
+  display:flex;align-items:center;justify-content:center;transition:all 120ms}
+.checkbox.on{border-color:var(--blue-500);background:var(--blue-500)}
+.checkbox svg{opacity:0;transition:opacity 120ms}
+.checkbox.on svg{opacity:1}
+
+/* history rows */
+.pagetitle{font:700 24px/1.2 var(--font-sans);color:var(--navy-900);letter-spacing:-.02em;text-wrap:balance}
+.subtle{font:400 15px/1.45 var(--font-sans);color:var(--grey-600)}
+.namelbl{font:600 13px var(--font-sans);color:var(--grey-500)}
+.rowbox{border:1px solid var(--grey-200);border-radius:16px;padding:0 16px;box-shadow:var(--shadow-sm)}
+.hrow{border-top:1px solid var(--grey-100)}
+.hrow:first-child{border-top:none}
+.hrow .head{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:10px;padding:14px 0;cursor:pointer}
+.hrow .label{font:600 13px var(--font-sans);color:var(--grey-500)}
+.hrow .label.pr{color:var(--blue-700)}
+.hrow .value{font:500 16px/1.35 var(--font-sans);color:var(--navy-900);white-space:pre-line}
+.hrow .value.clip{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hrow .cta{flex:none;display:flex;align-items:center;gap:2px;font:600 12px var(--font-sans);color:var(--blue-600)}
+.hrow .cta svg{transition:transform 200ms}
+.hrow .detail{padding:0 0 14px;font:500 13px/1.5 var(--font-sans);color:var(--grey-600);white-space:pre-line}
+.appendixbox{border:1px solid var(--grey-200);border-radius:16px;overflow:hidden}
+.appendixbox .aphead{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:10px;
+  padding:14px 16px;cursor:pointer;background:var(--grey-50)}
+.appendixbox .aphead .t{flex:1;font:600 15px var(--font-sans);color:var(--navy-900)}
+.aprow{display:grid;grid-template-columns:36px minmax(0,1fr);gap:2px 8px;padding:12px 16px;border-top:1px solid var(--grey-100)}
+.aprow .n{font:700 13px var(--font-mono);color:var(--blue-700)}
+.aprow .doc{font:600 13px var(--font-sans);color:var(--grey-600)}
+.aprow .txt{grid-column:2;font:400 14px/1.4 var(--font-sans);color:var(--navy-900)}
+.toast{position:absolute;left:20px;right:20px;bottom:150px;background:var(--navy-900);color:#fff;border-radius:12px;
+  padding:12px 16px;font:500 14px/1.4 var(--font-sans);box-shadow:var(--shadow-lg);z-index:30}
+
+/* doctor view 2c */
+.doc-qr{flex:none;width:92px;height:92px;padding:6px;border:1px solid var(--grey-200);border-radius:12px;background:#fff;
+  display:flex;align-items:center;justify-content:center}
+.doc-qr canvas,.doc-qr img{width:100%!important;height:100%!important}
+.docrow{padding:14px 0;border-top:1px solid var(--grey-200);display:flex;flex-direction:column;gap:4px}
+.docrow .dl{font:600 13px var(--font-sans);color:var(--blue-700);letter-spacing:.04em;text-transform:uppercase}
+.docrow .dv{font:500 20px/1.3 var(--font-sans);color:var(--navy-900);text-wrap:pretty}
+.docrow .dv .src{color:var(--blue-600)}
+.qapanel{border:1px solid var(--blue-100);border-radius:16px;overflow:hidden}
+.qapanel .qahead{padding:12px 16px;background:var(--blue-50);font:600 14px var(--font-sans);color:var(--navy-900)}
+.qabtns{display:flex;flex-direction:column;gap:8px;padding:12px 16px}
+.qabtn{all:unset;cursor:pointer;border:1px solid var(--blue-100);border-radius:12px;padding:12px 14px;
+  font:600 15px var(--font-sans);color:var(--navy-900);background:#fff}
+.qabtn.active{background:var(--navy-900);color:#fff;border-color:var(--navy-900)}
+.qaanswer{padding:0 16px 14px;display:flex;flex-direction:column;gap:10px}
+.qaanswer .atext{font:400 15px/1.5 var(--font-sans);color:var(--text-body)}
+.speakbtn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
+  padding:8px 14px;border-radius:999px;background:var(--blue-50);color:var(--blue-700);font:600 14px var(--font-sans)}
+.speakbtn.on{background:var(--blue-500);color:#fff}
+
+/* splash 3a */
+.splash{background:linear-gradient(180deg,#fff 0%,var(--blue-50) 60%,var(--blue-100) 100%)}
+.splash .center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:0 32px;text-align:center}
+.splash .disc{width:104px;height:104px;border-radius:999px;background:#fff;box-shadow:var(--shadow-lg);display:flex;align-items:center;justify-content:center}
+.splash .disc img{height:56px;width:auto}
+.splash h1{font:800 36px/1.1 var(--font-sans);color:var(--navy-900);letter-spacing:-.02em}
+.splash .tag{font:500 20px/1.35 var(--font-sans);color:var(--navy-700);text-wrap:balance}
+.splash .tag .hand{font:600 30px/1 var(--font-hand);color:var(--blue-600)}
+.splash .own{margin:0;font:500 15px/1.45 var(--font-sans);color:var(--grey-600);text-align:center;font-style:italic}
+
+@keyframes rise{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:none}}
+
+.screen{display:none;flex-direction:column;height:100%}
+.screen.active{display:flex}
+
+/* ===== print: English summary + Spanish appendix ===== */
+@media print{
+  body{display:block;background:#fff;padding:0}
+  .phone{width:auto;height:auto;max-height:none;border:none;border-radius:0;box-shadow:none}
+  .statusbar,.appbar,.tabbar,.composer,.footer,.cardbtns,.hrow .cta,#screen-splash,
+  .screen:not(#screen-2a) .body{display:none!important}
+  .screen{display:flex!important}
+  #printdoc{display:block!important}
+}
+#printdoc{display:none}
+@media print{
+  #printdoc{display:block!important;padding:16mm}
+  #printdoc h1{font:700 20px var(--font-sans);color:#001f4b;margin:0 0 2px}
+  #printdoc .meta{font:400 11px var(--font-sans);color:#555;margin-bottom:10px}
+  #printdoc .demo{border:1px solid #ccc;padding:5px 8px;font:400 10px var(--font-sans);color:#555;margin-bottom:12px}
+  #printdoc .sec{font:700 11px var(--font-sans);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #000;padding-bottom:2px;margin:12px 0 5px}
+  #printdoc .r{font:400 12px var(--font-sans);margin:3px 0;color:#111}
+  #printdoc .r .src{color:#0f6b86;font-weight:600}
+  #printdoc .appx{page-break-before:always}
+  #printdoc .ap{font:400 12px var(--font-sans);margin:5px 0}
+  #printdoc .ap .n{font-weight:700;color:#0f6b86}
+}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- ========== 3a SPLASH ========== -->
+  <section class="screen active" id="screen-splash">
+    <div class="statusbar"><span>8:00 AM</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="badge" data-i18n="badge">Paciente ficticio</span>
+        <div class="langtoggle" role="group" aria-label="Language">
+          <button data-lang="en">EN</button><button data-lang="es" class="active">ESP</button>
+        </div>
+      </div>
+    </div>
+    <div class="splash center" style="flex:1">
+      <div class="disc"><span id="logo-splash"></span></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <h1>Bloom Vital</h1>
+        <span class="tag"><span data-i18n="tag1">Tu historial médico,</span> <span class="hand" data-i18n="tag2">donde vayas</span></span>
+      </div>
+    </div>
+    <div style="flex:none;padding:0 24px 18px;display:flex;flex-direction:column;gap:14px;background:var(--blue-100)">
+      <p class="own"><span data-i18n="own1">Tu médico tiene la última palabra.</span> <b data-i18n="own2">Tú eres dueño de tu información.</b></p>
+      <button class="btn btn-primary btn-full" style="padding:16px" onclick="go('1a')" data-i18n="start">Comenzar</button>
+    </div>
+    <div class="footer" style="background:var(--blue-100);border-top:none" data-i18n="footer">No es para emergencias. Llama al 911.</div>
+  </section>
+
+  <!-- ========== 1a CHAT · opening + attach ========== -->
+  <section class="screen" id="screen-1a">
+    <div class="statusbar"><span>9:41 AM</span><span class="battery"><span></span></span></div>
+    <div class="appbar">
+      <div class="brand"><span class="logo" id="logo-1a"></span><span class="name">Bloom Vital</span></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="badge" data-i18n="badge">Paciente ficticio</span>
+        <div class="langtoggle" role="group" aria-label="Language"><button data-lang="en">EN</button><button data-lang="es" class="active">ESP</button></div>
+      </div>
+    </div>
+    <div class="body" id="body-1a">
+      <div class="daylabel" data-i18n="today">Hoy</div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-self:flex-start;max-width:88%">
+        <span class="small-label">Bloom Vital</span>
+        <div class="bubble-bot" data-i18n="open">Hola, Nicolás. Comencemos. Agrega la información médica que tengas a la mano. Revisémosla juntos.</div>
+      </div>
+      <!-- attached files + fact cards get injected here by JS after Attach -->
+      <div id="attach-slot-1a"></div>
+    </div>
+    <div class="composer">
+      <button class="iconbtn" aria-label="Adjuntar" onclick="simulateAttach()" title="Adjuntar documentos">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <input id="input-1a" data-i18n-ph="ph1" placeholder="Escribe o adjunta…">
+      <button class="sendbtn" aria-label="Enviar" onclick="sendChat('1a')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+      </button>
+    </div>
+    <div class="footer" data-i18n="footer">No es para emergencias. Llama al 911.</div>
+    <nav class="tabbar">
+      <a class="active" onclick="go('1a')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Chat</a>
+      <a onclick="go('2a')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>Historial / History</a>
+    </nav>
+  </section>
+
+  <!-- ========== 1b CHAT · free-text report ========== -->
+  <section class="screen" id="screen-1b">
+    <div class="statusbar"><span>9:42 AM</span><span class="battery"><span></span></span></div>
+    <div class="appbar">
+      <div class="brand"><span class="logo" id="logo-1b"></span><span class="name">Bloom Vital</span></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="badge" data-i18n="badge">Paciente ficticio</span>
+        <div class="langtoggle" role="group" aria-label="Language"><button data-lang="en">EN</button><button data-lang="es" class="active">ESP</button></div>
+      </div>
+    </div>
+    <div class="body" id="body-1b">
+      <div class="factcard">
+        <div class="inner" style="gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span class="factcard" style="all:unset;font:600 12px var(--font-sans);color:var(--blue-700);letter-spacing:.04em;text-transform:uppercase" data-i18n="allergies">Alergias</span>
+            <span class="badge danger" data-i18n="forbidden">Prohibido</span>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <span style="font:600 20px/1.3 var(--font-sans);color:var(--navy-900);padding:6px 0" data-i18n="shellfish">Mariscos</span>
+            <span style="font:600 20px/1.3 var(--font-sans);color:var(--navy-900);padding:6px 0;border-top:1px solid var(--grey-100)" data-i18n="almonds">Almendras</span>
+          </div>
+          <div class="patientnote">
+            <span class="pnlbl" data-i18n="noteLbl">Nota del paciente</span>
+            <span class="pntext" data-i18n="hives">Me enronché cuando comí mariscos en la playa en el 2015.</span>
+          </div>
+        </div>
+      </div>
+      <!-- live free-text messages injected here -->
+      <div id="live-slot-1b"></div>
+    </div>
+    <div class="composer">
+      <input id="input-1b" data-i18n-ph="ph2" placeholder="Escribe un mensaje…" onkeydown="if(event.key==='Enter')sendChat('1b')">
+      <button class="sendbtn" aria-label="Enviar" onclick="sendChat('1b')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+      </button>
+    </div>
+    <div class="footer" data-i18n="footer">No es para emergencias. Llama al 911.</div>
+    <nav class="tabbar">
+      <a class="active" onclick="go('1b')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Chat</a>
+      <a onclick="go('2a')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>Historial / History</a>
+    </nav>
+  </section>
+
+  <!-- ========== 1c CHAT · review gate / translate ========== -->
+  <section class="screen" id="screen-1c">
+    <div class="statusbar"><span>9:45 AM</span><span class="battery"><span></span></span></div>
+    <div class="appbar">
+      <div class="brand"><span class="logo" id="logo-1c"></span><span class="name">Bloom Vital</span></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="badge" data-i18n="badge">Paciente ficticio</span>
+        <div class="langtoggle" role="group" aria-label="Language"><button data-lang="en">EN</button><button data-lang="es" class="active">ESP</button></div>
+      </div>
+    </div>
+    <div class="body" style="justify-content:flex-end">
+      <div class="confirmed" style="align-self:center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        <span data-i18n="rev6">6 de 6 datos revisados</span>
+      </div>
+      <div class="ackcard">
+        <div class="top"></div>
+        <button class="ackrow" id="ackrow" onclick="toggleAck()">
+          <span class="checkbox" id="ackbox"><svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2l2.3 2.3 4.7-5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span style="display:flex;flex-direction:column;gap:6px">
+            <span style="font:600 20px var(--font-sans);color:var(--navy-900)" data-i18n="ackTitle">Lo revisé</span>
+            <span style="font:400 16px/1.45 var(--font-sans);color:var(--text-body)" data-i18n="disclaimer">Esto no es una verificación médica ni una traducción certificada.</span>
+          </span>
+        </button>
+        <div style="padding:0 20px 22px">
+          <button class="btn btn-primary btn-full" id="translatebtn" disabled onclick="go('2a')" data-i18n="translateCta">Traducir al inglés</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer" data-i18n="footer">No es para emergencias. Llama al 911.</div>
+    <nav class="tabbar">
+      <a class="active" onclick="go('1c')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Chat</a>
+      <a onclick="go('2a')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>Historial / History</a>
+    </nav>
+  </section>
+
+  <!-- ========== 2a / 2b HISTORY · English summary (rows expand = 2b) ========== -->
+  <section class="screen" id="screen-2a">
+    <div class="statusbar"><span>9:46 AM</span><span class="battery"><span></span></span></div>
+    <div class="appbar">
+      <div class="brand"><span class="logo" id="logo-2a"></span><span class="name">Bloom Vital</span></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="badge">Fictional patient</span>
+        <div class="langtoggle" role="group" aria-label="Language"><button data-lang="en">EN</button><button data-lang="es" class="active">ESP</button></div>
+      </div>
+    </div>
+    <div class="body" id="body-2a">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span class="namelbl">Nicolás Herrera Ruiz</span>
+        <h1 class="pagetitle">Bloom Vital health summary (patient-prepared)</h1>
+        <p class="subtle">Not clinically or translation verified.</p>
+      </div>
+      <div class="rowbox" id="rowbox"></div>
+      <div class="appendixbox">
+        <button class="aphead" onclick="toggleAppendix()">
+          <span class="t">Source appendix (original Spanish)</span>
+          <svg id="aprot" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-600)" stroke-width="2" stroke-linecap="round" style="transform:rotate(90deg);transition:transform 200ms"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <div id="appendixlist"></div>
+      </div>
+    </div>
+    <div id="toast-2a"></div>
+    <div style="flex:none;display:flex;gap:10px;padding:12px 20px;border-top:1px solid var(--grey-100)">
+      <button class="btn btn-primary" style="flex:1" onclick="go('2c')">Show to my doctor</button>
+      <button class="btn btn-secondary" onclick="doExport()">Export</button>
+    </div>
+    <div class="footer">Not for emergencies. Call 911.</div>
+    <nav class="tabbar">
+      <a onclick="go('1a')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Chat</a>
+      <a class="active" onclick="go('2a')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>Historial / History</a>
+    </nav>
+  </section>
+
+  <!-- ========== 2c SHOW TO MY DOCTOR · full screen, QR, voice panel ========== -->
+  <section class="screen" id="screen-2c">
+    <div class="statusbar"><span>9:48 AM</span><span class="battery"><span></span></span></div>
+    <div class="appbar">
+      <div class="brand"><span class="logo" id="logo-2c"></span><span class="badge">Fictional patient</span></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="langtoggle" role="group" aria-label="Language"><button data-lang="en">EN</button><button data-lang="es" class="active">ESP</button></div>
+        <a aria-label="Close" onclick="go('2a')" style="width:40px;height:40px;border-radius:999px;background:var(--grey-100);display:flex;align-items:center;justify-content:center;color:var(--navy-900);cursor:pointer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+          <span class="subtle" style="font-size:14px">Patient-prepared · show this to your doctor</span>
+          <span style="font:700 24px/1.15 var(--font-sans);color:var(--navy-900);letter-spacing:-.02em">Nicolás Herrera Ruiz</span>
+        </div>
+        <div class="doc-qr" id="docqr"></div>
+      </div>
+      <div style="display:flex;flex-direction:column" id="docrows"></div>
+
+      <!-- Doctor question panel -->
+      <div class="qapanel">
+        <div class="qahead">Concept: answers only from the documents</div>
+        <div class="qabtns" id="qabtns"></div>
+        <div class="qaanswer">
+          <span class="atext" id="qaanswer"></span>
+          <button class="speakbtn" id="speakbtn" onclick="speakAnswer()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            <span id="speaklabel">Read aloud</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="footer">Not for emergencies. Call 911.</div>
+  </section>
+
+  <!-- print-only document: English summary + Spanish appendix -->
+  <div id="printdoc"></div>
+
+</div><!-- /phone -->
+
+<script>
+/* ============================================================
+   Bloom Vital demo logic — all in-memory, no backend, no AI.
+   ============================================================ */
+
+/* Inline "B" reduced logo (navy), recreated as SVG so index.html is standalone. */
+var LOGO_SVG = '<svg viewBox="0 0 512 820" width="100%" height="100%" fill="#001f4b" xmlns="http://www.w3.org/2000/svg" aria-label="Bloom" role="img">'
+ + '<path d="M250 150c8-40 70-30 64 12-6 40-26 150-40 236 46 8 108-6 120-70 14-74-40-140-120-150-96-12-196 40-214 150-10 66 20 126 78 150 18 8 20 26 10 40-8 10-26 10-40-2C40 648 0 560 16 462 40 320 170 232 290 244c110 12 190 118 168 232-20 104-120 150-210 134-10 40-18 74-22 86-6 18-30 22-42 8-10-12-10-26-4-44 0 0 36-130 70-290z" />'
+ + '<path d="M150 560c-30 8-44 44-30 72 10 20 36 24 56 10 16-12 22-34 14-56-8-20-24-32-40-26z m18 44c-6 10-20 10-24-2-4-10 4-20 14-18 8 2 14 12 10 20z"/>'
+ + '</svg>';
+['logo-splash','logo-1a','logo-1b','logo-1c','logo-2a','logo-2c'].forEach(function(id){
+  var el=document.getElementById(id); if(el) el.innerHTML=LOGO_SVG;
+});
+
+/* ---------- i18n (UI chrome strings that switch EN/ESP) ---------- */
+var I18N = {
+  es:{ badge:'Paciente ficticio', footer:'No es para emergencias. Llama al 911.',
+    tag1:'Tu historial médico,', tag2:'donde vayas',
+    own1:'Tu médico tiene la última palabra.', own2:'Tú eres dueño de tu información.', start:'Comenzar',
+    today:'Hoy', open:'Hola, Nicolás. Comencemos. Agrega la información médica que tengas a la mano. Revisémosla juntos.',
+    ph1:'Escribe o adjunta…', ph2:'Escribe un mensaje…',
+    allergies:'Alergias', forbidden:'Prohibido', shellfish:'Mariscos', almonds:'Almendras',
+    noteLbl:'Nota del paciente', hives:'Me enronché cuando comí mariscos en la playa en el 2015.',
+    rev6:'6 de 6 datos revisados', ackTitle:'Lo revisé',
+    disclaimer:'Esto no es una verificación médica ni una traducción certificada.', translateCta:'Traducir al inglés' },
+  en:{ badge:'Fictional patient', footer:'Not for emergencies. Call 911.',
+    tag1:'Your medical history,', tag2:'wherever you go',
+    own1:'Your doctor keeps the final say.', own2:'You own your health information.', start:'Get started',
+    today:'Today', open:"Hi, Nicolás. Let's get started. Add any medical information you have on hand. We'll review it together.",
+    ph1:'Type or attach…', ph2:'Type a message…',
+    allergies:'Allergies', forbidden:'Prohibited', shellfish:'Shellfish', almonds:'Almonds',
+    noteLbl:'Patient note', hives:'I broke out in hives when I ate shellfish at the beach in 2015.',
+    rev6:'6 of 6 facts reviewed', ackTitle:'I reviewed this',
+    disclaimer:'This is not a medical verification or a certified translation.', translateCta:'Translate to English' }
+};
+var lang='es';
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var k=el.getAttribute('data-i18n'); if(I18N[lang][k]!=null) el.textContent=I18N[lang][k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+    var k=el.getAttribute('data-i18n-ph'); if(I18N[lang][k]!=null) el.placeholder=I18N[lang][k];
+  });
+  document.querySelectorAll('.langtoggle button').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-lang')===lang);
+  });
+}
+document.querySelectorAll('.langtoggle button').forEach(function(b){
+  b.addEventListener('click', function(){ lang=b.getAttribute('data-lang'); applyLang(); });
+});
+
+/* ---------- navigation ---------- */
+function go(id){
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  var el=document.getElementById('screen-'+id); if(el) el.classList.add('active');
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  if(id==='2c'){ renderDoctor(); }
+  var body=el && el.querySelector('.body'); if(body) body.scrollTop=0;
+}
+
+/* ============================================================
+   DATA — one fictional patient, Nicolás Herrera Ruiz (Mexico City).
+   Two fictional documents. Source lines copied character-for-character.
+   ============================================================ */
+var DOCS = {
+  A:{ label:'Receta · Endocrinología (ficticia)', kind:'PDF', meta:'PDF · 1 página' },
+  B:{ label:'Diagnóstico · Hospital (ficticio), Ciudad de México', kind:'JPG', meta:'Imagen · JPG · 12/03/2026' }
+};
+/* exact source text per number */
+var SOURCES = [
+  { n:'[1]', doc:'Diagnóstico · Hospital (ficticio)', text:'Glucosa en ayuno 98 mg/dL' },
+  { n:'[2]', doc:'Diagnóstico · Hospital (ficticio)', text:'Colesterol total 210 mg/dL' },
+  { n:'[3]', doc:'Receta · Endocrinología (ficticia)', text:'Losartán 50 mg, tomar 1 tab c/24 h' },
+  { n:'[4]', doc:'Diagnóstico · Hospital (ficticio)', text:'Alergias: mariscos, almendras' },
+  { n:'[5]', doc:'Diagnóstico · Hospital (ficticio)', text:'Antecedentes: HTA. Apendicectomía 2015' }
+];
+
+/* fact cards revealed one by one in 1a after Attach. Each links to a source number. */
+var FACT_CARDS = [
+  { title:'Medicamento', value:'Losartán 50 mg', srcN:3 },
+  { title:'Glucosa en ayuno', value:'98 mg/dL', srcN:1 },
+  { title:'Colesterol total', value:'210 mg/dL', srcN:2 },
+  { title:'Fecha del diagnóstico', value:'12/03/2026', srcN:4, dateAmbiguous:true },
+  { title:'Alergias', value:'Mariscos, almendras', srcN:4 },
+  { title:'Antecedentes', value:'HTA. Apendicectomía 2015', srcN:5 }
+];
+
+/* in-memory state */
+var state = {
+  attached:false,
+  cardNotes:{},        // index -> note text (Nota del paciente)
+  reported:[],         // {text, date}  free-text chat, "Reportado por el paciente"
+  ack:false,
+  openRows:{}, appendixOpen:true,
+  q:0, speaking:false
+};
+var TODAY='24 oct 2026';
+
+/* ---------- 1a: simulate attach + reveal fact cards ---------- */
+function simulateAttach(){
+  if(state.attached) return;
+  state.attached=true;
+  var slot=document.getElementById('attach-slot-1a');
+  slot.innerHTML='';
+  // attached file bubbles (right side)
+  var files=document.createElement('div');
+  files.style.cssText='align-self:flex-end;width:82%;display:flex;flex-direction:column;align-items:flex-end;gap:8px';
+  [DOCS.A,DOCS.B].forEach(function(d){
+    var f=document.createElement('div'); f.className='filecard';
+    f.innerHTML='<span class="ext">'+d.kind+'</span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">'
+      +'<span class="fn">'+esc(d.label)+'</span><span class="fm">'+esc(d.meta)+'</span></span>';
+    files.appendChild(f);
+  });
+  slot.appendChild(files);
+  // reveal cards one by one
+  FACT_CARDS.forEach(function(card,i){
+    setTimeout(function(){ slot.appendChild(buildFactCard(card,i)); scrollBody('body-1a'); }, 450*(i+1));
+  });
+  // after the last card, offer to continue to the review gate
+  setTimeout(function(){
+    var cont=document.createElement('button');
+    cont.className='btn btn-primary btn-full'; cont.style.marginTop='4px';
+    cont.textContent = lang==='es' ? 'Continuar a revisión' : 'Continue to review';
+    cont.onclick=function(){ go('1b'); };
+    slot.appendChild(cont); scrollBody('body-1a');
+  }, 450*(FACT_CARDS.length+1));
+}
+
+function buildFactCard(card,i){
+  var src=SOURCES[card.srcN-1];
+  var wrap=document.createElement('div'); wrap.className='factcard';
+  var amberTag = card.dateAmbiguous
+    ? '<span class="tag-amber"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>'
+      + (lang==='es'?'Fecha ambigua':'Ambiguous date') + '</span>'
+    : '';
+  wrap.innerHTML =
+    '<div class="top"></div>'
+    + '<div class="inner">'
+    +   '<span class="ftitle">'+esc(card.title)+'</span>'
+    +   '<span class="fval">'+esc(card.value)+'</span>'
+    +   amberTag
+    +   '<div class="srcline"><span class="srclbl">'+src.n+' · '+esc(src.doc)+'</span>'
+    +       '<span class="srctext">“'+esc(src.text)+'”</span></div>'
+    +   '<div class="cardbtns">'
+    +     '<button class="btn btn-primary" data-ok>'+(lang==='es'?'Sí, es correcto':'Yes, correct')+'</button>'
+    +     '<button class="btn btn-ghost" data-note>'+(lang==='es'?'Agregar nota':'Add note')+'</button>'
+    +   '</div>'
+    +   '<div data-note-area></div>'
+    + '</div>';
+  var okBtn=wrap.querySelector('[data-ok]');
+  okBtn.onclick=function(){
+    var btns=wrap.querySelector('.cardbtns');
+    var done=document.createElement('span'); done.className='confirmed';
+    done.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'+(lang==='es'?'Confirmado':'Confirmed');
+    btns.replaceWith(done);
+  };
+  wrap.querySelector('[data-note]').onclick=function(){
+    var area=wrap.querySelector('[data-note-area]');
+    if(area.querySelector('textarea')) return;
+    var box=document.createElement('div'); box.className='noteinput';
+    var ta=document.createElement('textarea');
+    ta.placeholder = lang==='es' ? 'Escribe tu nota…' : 'Write your note…';
+    var save=document.createElement('button'); save.className='btn btn-secondary'; save.style.alignSelf='flex-start';
+    save.textContent = lang==='es' ? 'Guardar nota' : 'Save note';
+    save.onclick=function(){
+      var t=ta.value.trim(); if(!t){ return; }
+      state.cardNotes[i]=t;
+      var pn=document.createElement('div'); pn.className='patientnote';
+      pn.innerHTML='<span class="pnlbl">'+(lang==='es'?'Nota del paciente':'Patient note')+'</span><span class="pntext">'+esc(t)+'</span>';
+      area.innerHTML=''; area.appendChild(pn);
+      // the original fact value above never changes
+    };
+    box.appendChild(ta); box.appendChild(save);
+    area.appendChild(box); ta.focus();
+  };
+  return wrap;
+}
+
+/* ---------- chat send ---------- */
+function sendChat(screen){
+  var input=document.getElementById('input-'+screen);
+  var t=input.value.trim(); if(!t) return;
+  input.value='';
+  if(screen==='1a'){
+    // on 1a, typing a message still records it as patient-reported and moves to 1b context
+    recordReported(t);
+    renderLive1b();
+    go('1b');
+    return;
+  }
+  recordReported(t);
+  renderLive1b();
+  scrollBody('body-1b');
+}
+function recordReported(t){
+  state.reported.push({ text:t, date:TODAY });
+}
+function renderLive1b(){
+  var slot=document.getElementById('live-slot-1b');
+  slot.innerHTML='';
+  state.reported.forEach(function(m){
+    var meBubble=document.createElement('div'); meBubble.className='bubble-me'; meBubble.textContent=m.text;
+    var reply=document.createElement('div');
+    reply.style.cssText='display:flex;flex-direction:column;gap:6px;align-self:flex-start;max-width:85%';
+    reply.innerHTML='<div class="bubble-bot">'+(lang==='es'?'Guardado, Nicolás.':'Guardado, Nicolás.')+'</div>'
+      +'<span class="small-label" style="padding-left:4px">'+(lang==='es'?'Reportado por el paciente':'Reported by the patient')+' · '+esc(m.date)+'</span>';
+    slot.appendChild(meBubble); slot.appendChild(reply);
+  });
+}
+
+/* ---------- 1c review gate ---------- */
+function toggleAck(){
+  state.ack=!state.ack;
+  document.getElementById('ackbox').classList.toggle('on', state.ack);
+  document.getElementById('translatebtn').disabled = !state.ack;
+}
+
+/* ============================================================
+   HISTORY (2a/2b) — English rows, each with Show more.
+   Live notes/messages appear here. Every fact cites a source.
+   ============================================================ */
+function historyRows(){
+  // base rows
+  var labs = 'Fasting glucose 98 mg/dL [1]\nTotal cholesterol 210 mg/dL [2]';
+  var rows = [
+    { id:'meds', label:'Current medications', value:'Losartan 50 mg, once daily [3]',
+      detail:'Source [3] · Prescription (fictional). Original: “Losartán 50 mg, tomar 1 tab c/24 h”. Current/taking status not stated in the document.' },
+    { id:'labs', label:'Recent labs', value:labs,
+      detail:'Sources [1][2] · Hospital diagnosis (fictional). Date as written: 12/03/2026 (ambiguous — day/month order not resolved). Units kept as written; no conversion.' },
+    { id:'past', label:'Past conditions and procedures', value:'Hypertension (HTA); appendectomy, 2015 [5]',
+      detail:'Source [5] · Original: “Antecedentes: HTA. Apendicectomía 2015”.' },
+    { id:'all', label:'Allergies', value:'Shellfish, almonds [4]',
+      detail:'Source [4] · Original (Spanish): “Alergias: mariscos, almendras”. Patient note (chat): hives after eating shellfish at the beach, 2015.' },
+    { id:'miss', label:'Missing or unclear', value:'Medication current/taking status; exact day/month of 12/03/2026',
+      detail:'Losartan [3] has no documented current-use status. The date 12/03/2026 [1][2][4] is ambiguous and is shown as written. Blank fields = not documented.' },
+    { id:'pr', label:'Patient-reported', value:'', pr:true, detail:'Entered by the patient in chat. Not from records.' }
+  ];
+  // card notes (from 1a) -> attach to matching rows as patient notes
+  var noteLines=[];
+  Object.keys(state.cardNotes).forEach(function(k){
+    noteLines.push('• “'+state.cardNotes[k]+'” ('+FACT_CARDS[k].title+')');
+  });
+  // patient-reported free text
+  var prLines = state.reported.map(function(m){ return '• “'+m.text+'” — '+m.date; });
+  var prRow = rows[5];
+  if(prLines.length || noteLines.length){
+    prRow.value = (prLines.concat(noteLines)).map(stripBullet).join('\n') || '—';
+    prRow.detail = 'Entered by the patient (chat notes and reports). Not from records.\n'
+      + (prLines.length? ('Reports:\n'+prLines.join('\n')+'\n'):'')
+      + (noteLines.length? ('Notes on facts:\n'+noteLines.join('\n')):'');
+  } else {
+    prRow.value = 'No patient reports yet';
+  }
+  return rows;
+}
+function stripBullet(s){ return s.replace(/^•\s*/,''); }
+
+function renderHistory(){
+  var rows=historyRows();
+  var box=document.getElementById('rowbox'); box.innerHTML='';
+  rows.forEach(function(r){
+    var open=!!state.openRows[r.id];
+    var div=document.createElement('div'); div.className='hrow';
+    div.innerHTML =
+      '<button class="head">'
+      +  '<span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">'
+      +    '<span class="label'+(r.pr?' pr':'')+'">'+esc(r.label)+'</span>'
+      +    '<span class="value'+(open?'':' clip')+'">'+esc(r.value||'—')+'</span>'
+      +  '</span>'
+      +  '<span class="cta">'+(open?'Show less':'Show more')
+      +    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="transform:'+(open?'rotate(90deg)':'none')+'"><path d="M9 6l6 6-6 6"/></svg>'
+      +  '</span>'
+      + '</button>'
+      + (open? '<div class="detail">'+esc(r.detail)+'</div>' : '');
+    div.querySelector('.head').onclick=function(){ state.openRows[r.id]=!state.openRows[r.id]; renderHistory(); };
+    box.appendChild(div);
+  });
+  renderAppendix();
+}
+function toggleAppendix(){ state.appendixOpen=!state.appendixOpen; renderAppendix(); }
+function renderAppendix(){
+  document.getElementById('aprot').style.transform = state.appendixOpen?'rotate(90deg)':'none';
+  var list=document.getElementById('appendixlist'); list.innerHTML='';
+  if(!state.appendixOpen) return;
+  SOURCES.forEach(function(s){
+    var row=document.createElement('div'); row.className='aprow'; row.setAttribute('lang','es');
+    row.innerHTML='<span class="n">'+s.n+'</span><span class="doc">'+esc(s.doc)+'</span>'
+      +'<span class="txt">“'+esc(s.text)+'”</span>';
+    list.appendChild(row);
+  });
+}
+
+/* ---------- export (print) ---------- */
+function doExport(){
+  buildPrintDoc();
+  showToast('toast-2a', 'Opening print… nothing is sent automatically.');
+  setTimeout(function(){ window.print(); }, 350);
+}
+function buildPrintDoc(){
+  var rows=historyRows();
+  var html='<h1>Bloom Vital health summary (patient-prepared)</h1>'
+    +'<div class="meta">Nicolás Herrera Ruiz · Fictional patient · generated '+new Date().toISOString().slice(0,10)+'</div>'
+    +'<div class="demo">DEMO ONLY — fictional synthetic data. Prewritten facts/translations (not live extraction). Not clinically or translation verified. No clinical reasoning, no unit conversion.</div>';
+  rows.forEach(function(r){
+    html+='<div class="sec">'+esc(r.label)+'</div>';
+    (r.value||'—').split('\n').forEach(function(line){ html+='<div class="r">'+esc(line)+'</div>'; });
+  });
+  html+='<div class="appx"><h1>Source appendix — original Spanish</h1>'
+    +'<div class="meta">Nicolás Herrera Ruiz · fictional documents</div>';
+  SOURCES.forEach(function(s){
+    html+='<div class="ap"><span class="n">'+s.n+'</span> '+esc(s.doc)+'<br>“'+esc(s.text)+'”</div>';
+  });
+  html+='</div>';
+  document.getElementById('printdoc').innerHTML=html;
+}
+
+/* ============================================================
+   SHOW TO MY DOCTOR (2c) — QR + rows + voice Q&A.
+   Answers built ONLY from cited facts.
+   ============================================================ */
+var DOC_ROWS = [
+  { label:'Current medications', value:'Losartan 50 mg, once daily', src:'[3]' },
+  { label:'Recent labs', value:'Fasting glucose 98 mg/dL, total cholesterol 210 mg/dL · date 12/03/2026 (ambiguous)', src:'[1][2]' },
+  { label:'Past conditions and procedures', value:'Hypertension; appendectomy, 2015', src:'[5]' },
+  { label:'Allergies', value:'Shellfish, almonds', src:'[4]' },
+  { label:'Missing or unclear', value:'Medication current status; exact day/month of 12/03/2026', src:'[1][2][3]' }
+];
+var QA = [
+  { q:'Where does this come from?',
+    a:'Fasting glucose 98 mg/dL comes from source [1], and total cholesterol 210 mg/dL from source [2], both from the fictional hospital diagnosis. Losartan 50 mg once daily comes from source [3], the prescription. Allergies (shellfish, almonds) come from source [4].' },
+  { q:'What is missing or unclear?',
+    a:'The date 12/03/2026 on sources [1], [2] and [4] is ambiguous: the day and month order is not resolved, so it is shown exactly as written. The current taking status of Losartan [3] is not documented. Blank fields mean not documented.' },
+  { q:'When was this measured?',
+    a:'Fasting glucose [1] and total cholesterol [2] are dated 12/03/2026 as written on the fictional diagnosis. The day and month order is unclear, so no date conversion is made.' }
+];
+function renderDoctor(){
+  // rows
+  var dr=document.getElementById('docrows'); dr.innerHTML='';
+  DOC_ROWS.forEach(function(r){
+    var d=document.createElement('div'); d.className='docrow';
+    d.innerHTML='<span class="dl">'+esc(r.label)+'</span>'
+      +'<span class="dv">'+esc(r.value)+' <span class="src">'+esc(r.src)+'</span></span>';
+    dr.appendChild(d);
+  });
+  // QR
+  var qrEl=document.getElementById('docqr'); qrEl.innerHTML='';
+  var url='https://martinsc10b.github.io/Hackaton/';
+  if(window.QRCode){
+    try{ new QRCode(qrEl,{text:url,width:80,height:80,colorDark:'#001f4b',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}); }
+    catch(e){ qrEl.innerHTML=qrFallback(url); }
+  } else { qrEl.innerHTML=qrFallback(url); }
+  // Q&A buttons
+  var qb=document.getElementById('qabtns'); qb.innerHTML='';
+  QA.forEach(function(item,i){
+    var b=document.createElement('button'); b.className='qabtn'+(i===state.q?' active':'');
+    b.textContent=item.q;
+    b.onclick=function(){ if(window.speechSynthesis) window.speechSynthesis.cancel(); state.speaking=false; state.q=i; renderDoctor(); };
+    qb.appendChild(b);
+  });
+  document.getElementById('qaanswer').textContent=QA[state.q].a;
+  var sb=document.getElementById('speakbtn'); sb.classList.toggle('on',state.speaking);
+  document.getElementById('speaklabel').textContent = state.speaking ? 'Stop' : 'Read aloud';
+}
+function qrFallback(url){
+  return '<div style="font:600 10px var(--font-sans);color:var(--grey-500);text-align:center;padding:4px">QR offline<br>'+esc(url)+'</div>';
+}
+function speakAnswer(){
+  var ss=window.speechSynthesis;
+  if(!ss){ alert('Speech synthesis not available in this browser.'); return; }
+  if(state.speaking){ ss.cancel(); state.speaking=false; renderDoctor(); return; }
+  var u=new SpeechSynthesisUtterance(QA[state.q].a);
+  u.lang='en-US';
+  u.onend=function(){ state.speaking=false; renderDoctor(); };
+  state.speaking=true; renderDoctor();
+  ss.speak(u);
+}
+
+/* ---------- helpers ---------- */
+function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function scrollBody(id){ var b=document.getElementById(id); if(b) b.scrollTop=b.scrollHeight; }
+function showToast(hostId,msg){
+  var host=document.getElementById(hostId); host.innerHTML='';
+  var t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  host.appendChild(t); setTimeout(function(){ host.innerHTML=''; },2600);
+}
+
+/* ---------- init ---------- */
+applyLang();
+renderHistory();
+window.addEventListener('beforeprint', buildPrintDoc);
+window.addEventListener('beforeunload', function(){ if(window.speechSynthesis) window.speechSynthesis.cancel(); });
+</script>
+</body>
+</html>
